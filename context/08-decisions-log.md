@@ -49,3 +49,15 @@ Format par entrée : **Contexte / Décision / Alternative écartée**. Toujours 
 - Ajouter une couleur d'accent pour la hero (violet, bleu, etc.) — va à l'encontre de la décision noir & blanc.
 - Utiliser un pattern image (PNG/JPG) au lieu de SVG — moins performant et plus difficile à maintenir.
 - Garder les plans épurés sans détail — ne suffisait pas à montrer les différences de valeur entre les niveaux.
+
+## 2026-09-01 — Better Auth : configuration Prisma obligatoire
+
+**Contexte** : Better Auth était importé sans adaptateur de base de données. La commande `npx auth@latest generate` échouait avec l'erreur `memory is not supported` car Better Auth par défaut utilise un adaptateur mémoire.
+
+**Décision** :
+- **Configuration** (`src/lib/auth.ts`) : toujours brancher l'adaptateur Prisma via `prismaAdapter(prisma)` dans l'option `database`.
+- **Schéma Prisma** : ajouter obligatoirement les trois modèles exigés par Better Auth : `Account` (identités sociales), `Session` (sessions utilisateur), `VerificationToken` (jetons d'auth email).
+- **Workflow** : après mise à jour du schéma, toujours exécuter `npm run db:migrate` avant `npx auth@latest generate`.
+
+**Alternative écartée** : utiliser l'adaptateur mémoire de Better Auth pour le développement (ne fonctionne pas avec la généération de schéma).
+
