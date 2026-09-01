@@ -21,6 +21,8 @@ export type Plan = {
   period: string
   note: string
   featured: boolean
+  features: string[]
+  savings?: number
 }
 
 export const featured: Article = {
@@ -124,6 +126,12 @@ export const plans: Plan[] = [
     period: 'mois',
     note: 'Sans engagement, annulable à tout moment.',
     featured: false,
+    features: [
+      'Accès illimité aux articles',
+      'Pas de publicités',
+      'Sauvegarde de lecture',
+      'Partage avec contact',
+    ],
   },
   {
     name: 'Annuel',
@@ -131,6 +139,15 @@ export const plans: Plan[] = [
     period: 'an',
     note: 'Deux mois offerts par rapport au tarif mensuel.',
     featured: true,
+    features: [
+      'Accès illimité aux articles',
+      'Pas de publicités',
+      'Sauvegarde de lecture',
+      'Support prioritaire',
+      'Accès aux archives complètes',
+      'Export en PDF des articles',
+    ],
+    savings: 17,
   },
 ]
 

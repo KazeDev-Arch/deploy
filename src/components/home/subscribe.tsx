@@ -1,4 +1,4 @@
-import { BookOpen, PenLine, ShieldCheck } from 'lucide-react'
+import { BookOpen, Check, PenLine, ShieldCheck } from 'lucide-react'
 
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
@@ -65,23 +65,31 @@ export function Subscribe() {
           ))}
         </div>
 
-        <div className="mx-auto mt-12 grid max-w-3xl gap-6 lg:grid-cols-2">
+        <div className="mx-auto mt-12 grid max-w-4xl gap-6 lg:grid-cols-2">
           {plans.map((plan) => (
             <div
               key={plan.name}
               className={cn(
-                'relative flex flex-col rounded-2xl border p-7',
+                'relative flex flex-col rounded-2xl border p-8 transition-all duration-300',
                 plan.featured
                   ? 'border-foreground bg-card shadow-[0_24px_50px_-30px_rgba(0,0,0,0.5)]'
-                  : 'border-border bg-card'
+                  : 'border-border bg-card hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.1)]'
               )}
             >
               {plan.featured && (
-                <Badge className="absolute -top-3 left-7">
+                <Badge className="absolute -top-3 left-8 mb-4">
                   Le plus avantageux
                 </Badge>
               )}
-              <h3 className="text-lg font-bold text-foreground">{plan.name}</h3>
+              <div className="flex items-baseline justify-between">
+                <h3 className="text-lg font-bold text-foreground">{plan.name}</h3>
+                {plan.savings && (
+                  <span className="text-xs font-semibold text-primary">
+                    Économise {plan.savings}%
+                  </span>
+                )}
+              </div>
+
               <p className="mt-5 flex items-baseline gap-1.5">
                 <span className="text-4xl font-bold tracking-tight text-foreground">
                   {formatXAF(plan.price)}
@@ -90,13 +98,32 @@ export function Subscribe() {
                   / {plan.period}
                 </span>
               </p>
+
               <p className="mt-2 text-sm text-muted-foreground">{plan.note}</p>
+
               <Button
-                className="mt-7 w-full"
+                className="mt-8 w-full"
                 variant={plan.featured ? 'default' : 'outline'}
               >
                 Commencer
               </Button>
+
+              <div className="mt-8 border-t border-border pt-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+                  Inclus dans ce plan
+                </p>
+                <ul className="mt-5 space-y-3">
+                  {plan.features.map((feature) => (
+                    <li
+                      key={feature}
+                      className="flex items-center gap-3 text-sm text-foreground"
+                    >
+                      <Check className="size-4 shrink-0 text-primary" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           ))}
         </div>

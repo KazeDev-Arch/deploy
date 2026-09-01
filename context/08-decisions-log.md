@@ -35,3 +35,17 @@ Format par entrée : **Contexte / Décision / Alternative écartée**. Toujours 
 **Décision** : les articles sont stockés et servis via **Prisma `Post`** (PostgreSQL). Strapi est **legacy** : son SDK, ses loaders, ses types et ses blocs (`components/blocks/`, `demo/strapi.*`) sont à retirer progressivement.
 
 **Alternative écartée** : utiliser Strapi comme source de vérité du contenu.
+
+## 2026-09-01 — Refonte hero section et plans d'abonnement
+
+**Contexte** : la hero section originale présentait un article vedette avec un style sobre mais peu distinctif. Les plans d'abonnement listaient uniquement le nom, prix et une petite note, sans détail visuel sur les avantages.
+
+**Décision** : 
+- **Hero section** : ajouter un background pattern subtil (SVG dots à opacity 0.02), améliorer la hiérarchie typographique (titre text-7xl, meilleur leading), différencier les CTA avec copywriting plus explicite ("Lire l'article vedette" + "Tous les articles"), augmenter les espacements pour une respiration plus professionnelle, renommer "À la une" → "Tendances".
+- **Plans d'abonnement** : enrichir le type `Plan` avec `features: string[]` et `savings?: number`, afficher 4-6 features par plan avec icônes Check, ajouter un badge "Économise X%" sur le plan annuel, améliorer les cards avec une section séparée et ombres subtiles.
+- **Design** : maintenir strictement le monochrome noir & blanc (aucune couleur ajoutée), utiliser uniquement les tokens shadcn, utiliser SVG inline pour le pattern (éviter les images externes).
+
+**Alternative écartée** : 
+- Ajouter une couleur d'accent pour la hero (violet, bleu, etc.) — va à l'encontre de la décision noir & blanc.
+- Utiliser un pattern image (PNG/JPG) au lieu de SVG — moins performant et plus difficile à maintenir.
+- Garder les plans épurés sans détail — ne suffisait pas à montrer les différences de valeur entre les niveaux.
