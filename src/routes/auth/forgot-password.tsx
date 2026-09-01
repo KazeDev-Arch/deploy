@@ -17,7 +17,7 @@ function ForgotPassword() {
         <p className="text-sm text-muted-foreground">
           Vous vous souvenez ?{' '}
           <Link
-            to="/login"
+            to="/auth/login"
             className="font-semibold text-foreground underline-offset-4 hover:underline"
           >
             Se connecter
