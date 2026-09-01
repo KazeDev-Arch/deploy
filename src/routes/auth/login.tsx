@@ -1,24 +1,24 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Lock, Mail } from 'lucide-react'
 
-import { AuthField, AuthShell } from '../components/auth/auth-shell'
-import { Button } from '../components/ui/button'
+import { AuthField, AuthShell } from '../../components/auth/auth-shell.tsx'
+import { Button } from '../../components/ui/button.tsx'
 
-export const Route = createFileRoute('/signup')({ component: Signup })
+export const Route = createFileRoute('/auth/login')({ component: Login })
 
-function Signup() {
+function Login() {
   return (
     <AuthShell
-      title="Créer un compte"
-      description="Rejoignez Deploy et accédez à tous les articles."
+      title="Se connecter"
+      description="Bon retour parmi nous. Renseignez vos identifiants."
       footer={
         <p className="text-sm text-muted-foreground">
-          Déjà un compte ?{' '}
+          Pas encore de compte ?{' '}
           <Link
-            to="/login"
+            to="/auth/signup"
             className="font-semibold text-foreground underline-offset-4 hover:underline"
           >
-            Se connecter
+            Créer un compte
           </Link>
         </p>
       }
@@ -38,12 +38,20 @@ function Signup() {
           label="Mot de passe"
           type="password"
           placeholder="••••••••"
-          autoComplete="new-password"
+          autoComplete="current-password"
           required
           icon={Lock}
+          labelAction={
+            <Link
+              to="/auth/forgot-password"
+              className="text-xs font-medium text-muted-foreground underline-offset-4 transition hover:text-foreground hover:underline"
+            >
+              Mot de passe oublié ?
+            </Link>
+          }
         />
         <Button type="submit" className="w-full">
-          Créer un compte
+          Se connecter
         </Button>
       </form>
     </AuthShell>

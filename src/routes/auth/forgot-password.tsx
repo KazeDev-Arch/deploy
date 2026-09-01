@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Mail } from 'lucide-react'
 
-import { AuthField, AuthShell } from '../components/auth/auth-shell'
-import { Button } from '../components/ui/button'
+import { AuthField, AuthShell } from '../../components/auth/auth-shell.tsx'
+import { Button } from '../../components/ui/button.tsx'
 
-export const Route = createFileRoute('/forgot-password')({
+export const Route = createFileRoute('/auth/forgot-password')({
   component: ForgotPassword,
 })
 

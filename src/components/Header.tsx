@@ -39,7 +39,7 @@ export default function Header() {
             asChild
             className="hidden text-muted-foreground hover:text-foreground sm:inline-flex"
           >
-            <Link to="/login">Se connecter</Link>
+            <Link to="/auth/login">Se connecter</Link>
           </Button>
           <Button size="sm" asChild>
             <a href="#abonnement">S’abonner</a>
