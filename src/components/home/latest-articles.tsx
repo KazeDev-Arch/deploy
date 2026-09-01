@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import { ArticleCard } from '../article-card'
 
 import { latest } from '#/data/home.ts'
+import { Link } from '@tanstack/react-router'
 
 export function LatestArticles() {
   return (
@@ -19,13 +20,13 @@ export function LatestArticles() {
             Derniers articles
           </h2>
         </div>
-        <a
-          href="#abonnement"
+        <Link
+          to="/posts"
           className="hidden items-center gap-1 text-sm font-medium text-muted-foreground no-underline transition hover:text-foreground sm:inline-flex"
         >
           Tout lire
           <ArrowRight className="size-4" />
-        </a>
+        </Link>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

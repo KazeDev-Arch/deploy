@@ -49,10 +49,8 @@ src/
 - **Types partagés** : `src/types/`.
 - **Intégration tierce** : `src/integrations/<nom>/`.
 
-## Point d'attention : deux sources de vérité pour les articles
+## Source de vérité : Prisma `Post`
 
-Deux modèles coexistent pour le contenu :
-- **Strapi** (headless CMS) — actuellement utilisé par `src/data/loaders/articles.ts` et les routes `demo/strapi.*`.
-- **Prisma `Post`** — modèle local avec `isPremium`, `content` (markdown), `status`, `publishedAt`.
+Les articles sont stockés et servis via le modèle **Prisma `Post`** (PostgreSQL) : `title`, `slug`, `content` (markdown), `excerpt`, `coverImage`, `postImages`, `isPremium`, `status`, `publishedAt`.
 
-À clarifier : quelle est la source de vérité des articles (Strapi vs PostgreSQL) et comment `isPremium` est déterminé. Voir `08-decisions-log.md`. Ne pas introduire une troisième source.
+**Strapi est legacy** : son SDK (`src/data/strapi-sdk.ts`), ses loaders (`src/data/loaders/articles.ts`), ses types (`src/types/strapi.ts`), ses blocs (`src/components/blocks/`) et les routes `demo/strapi.*` sont à retirer progressivement au profit de Prisma. Voir `08-decisions-log.md`. Ne pas introduire une troisième source.

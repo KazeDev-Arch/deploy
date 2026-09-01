@@ -6,6 +6,8 @@ Squelette vivant : documenter ici chaque contrat (server function, endpoint REST
 
 Les server functions sont exportées depuis `src/data/loaders/` (regroupées dans `index.ts` sous `strapiApi`).
 
+> ⚠️ Les functions « Articles (Strapi) » ci-dessous sont **legacy** : la source de vérité des articles est Prisma `Post` (voir `08-decisions-log.md`). Elles seront remplacées par des server functions lisant le modèle `Post`.
+
 ### Articles (Strapi)
 - `getArticlesData({ page?, category?, query? })` — `GET` — retourne `TStrapiResponseCollection<TArticle>` (pagination `PAGE_SIZE = 3`, tri `createdAt:desc`, populate `cover, author, category`).
 - `getArticleByIdData(documentId)` — `GET` — `TStrapiResponseSingle<TArticle>` (populate `cover, author, category, blocks.file, blocks.files`).
@@ -26,7 +28,7 @@ Les server functions sont exportées depuis `src/data/loaders/` (regroupées dan
 ## À documenter au fur et à mesure
 
 - Server functions d'écriture (créer un commentaire, liker, s'abonner, payer) — à ajouter dès qu'elles existent.
-- Contrat de paiement K-Pay (checkout, callback/webhook, statuts) — à confirmer.
+- Contrat de paiement K-Pay (checkout, callback/webhook, statuts) — provider confirmé, contrat à documenter.
 
 Format attendu par entrée :
 

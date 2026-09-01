@@ -20,7 +20,18 @@ Format par entrée : **Contexte / Décision / Alternative écartée**. Toujours 
 
 **Alternative écartée** : conserver une couleur d'accent de marque.
 
-## À confirmer (questions ouvertes)
+## 2026-09-01 — Paiement : K-Pay uniquement
 
-- **Source de vérité des articles** : Strapi (headless CMS) vs Prisma `Post` (PostgreSQL). Les deux coexistent — `data/loaders/articles.ts` utilise Strapi, le schéma Prisma définit `Post` avec `isPremium`. Décider laquelle porte la lecture et la détermination du premium.
-- **Paiement** : K-Pay (XAF) est le seul fournisseur renseigné (`provider: "KPAY"`). Confirmer l'absence de Stripe/carte.
+**Contexte** : le schéma Prisma renseignait `provider: "KPAY"` et la devise XAF, avec la question de savoir si d'autres moyens de paiement (Stripe/carte) seraient nécessaires.
+
+**Décision** : **K-Pay est le seul moyen de paiement** (Mobile Money, devise XAF). Pas de Stripe ni de carte bancaire.
+
+**Alternative écartée** : proposer Stripe/carte en plus de K-Pay.
+
+## 2026-09-01 — Source de vérité des articles : Prisma `Post`
+
+**Contexte** : deux modèles coexistaient pour les articles — Strapi (headless CMS, utilisé par `data/loaders/articles.ts` et les routes `demo/strapi.*`) et le modèle Prisma `Post` (avec `isPremium`, `content`, `status`, `publishedAt`).
+
+**Décision** : les articles sont stockés et servis via **Prisma `Post`** (PostgreSQL). Strapi est **legacy** : son SDK, ses loaders, ses types et ses blocs (`components/blocks/`, `demo/strapi.*`) sont à retirer progressivement.
+
+**Alternative écartée** : utiliser Strapi comme source de vérité du contenu.

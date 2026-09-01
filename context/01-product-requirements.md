@@ -6,14 +6,14 @@ Résumé opérationnel du produit. En cas de doute sur un détail, demander conf
 
 ### Lecture
 - Lister les articles (accueil : héro + derniers articles, newsletter).
-- Détail d'un article (rendu Markdown : rich text, images, citations, sliders).
+- Détail d'un article (rendu Markdown).
 - **Articles gratuits** lisibles sans compte.
 - **Articles premium** réservés aux abonnés actifs.
 - Recherche, pagination, filtrage par catégorie.
 
 ### Écriture
 - Rédaction d'articles par les auteurs (rôle `ADMIN`) — brouillon (`DRAFT`) / publié (`PUBLISHED`).
-- Contenu au format **Markdown** + blocs de contenu enrichis (voir Strapi et `src/components/blocks/`).
+- Contenu au format **Markdown** (modèle Prisma `Post` : `content`, `excerpt`, `coverImage`, `postImages`).
 
 ### Accès payant
 - **Plans d'abonnement** (nom, slug, prix, durée en jours, devise XAF).
@@ -32,7 +32,7 @@ Résumé opérationnel du produit. En cas de doute sur un détail, demander conf
 ## Hors périmètre (pour l'instant)
 
 - Back-office admin dédié (existe en germe via le rôle `ADMIN`, mais pas d'interface complète).
-- Carte bancaire / autres moyens de paiement que K-Pay (à confirmer).
+- Carte bancaire / autres moyens de paiement que K-Pay (hors scope — K-Pay uniquement).
 - Internationalisation (i18n) — l'UI est actuellement en français, chaînes en dur (voir `05-coding-conventions.md`).
 
 ## Statuts à respecter (vocabulaire stable)

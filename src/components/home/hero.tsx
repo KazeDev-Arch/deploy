@@ -68,8 +68,11 @@ export function HomeHero() {
 
           <ol className="mt-6 divide-y divide-border">
             {topStories.map((story, index) => (
-              <li key={story.title} className="group flex gap-5 py-5 first:pt-0">
-                <span className="pt-0.5 text-2xl font-bold leading-none text-muted-foreground/60 transition group-hover:text-foreground">
+              <li
+                key={story.title}
+                className="group flex gap-5 py-5 first:pt-0"
+              >
+                <span className="w-6 shrink-0 whitespace-nowrap text-right text-xl font-bold leading-none text-muted-foreground/50 group-hover:text-foreground">
                   {String(index + 1).padStart(2, '0')}
                 </span>
                 <div className="min-w-0">
@@ -83,7 +86,10 @@ export function HomeHero() {
                     <span aria-hidden="true">·</span>
                     <span>{story.readTime}</span>
                     {story.premium && (
-                      <Lock className="size-3" aria-label="Réservé aux abonnés" />
+                      <Lock
+                        className="size-3"
+                        aria-label="Réservé aux abonnés"
+                      />
                     )}
                   </p>
                 </div>

@@ -14,7 +14,10 @@
 ## Backend & base de données
 - **PostgreSQL** via **Prisma 7** + **@prisma/adapter-pg** (client généré dans `src/generated/prisma`).
 - **better-auth** (authentification email/mot de passe + `tanstackStartCookies`).
-- **Strapi** (headless CMS) via `@strapi/client` — source de contenu éditorial.
+- **Strapi** (headless CMS) via `@strapi/client` — **legacy** : les articles migrent vers Prisma `Post` (voir `08-decisions-log.md`).
+
+## Paiement
+- **K-Pay** (`provider: "KPAY"`) — Mobile Money, devise **XAF**. **Seul moyen de paiement** : pas de Stripe ni de carte bancaire (voir `08-decisions-log.md`).
 
 ## UI & styles
 - **Tailwind CSS v4** (`@tailwindcss/vite` + `@tailwindcss/typography` + `tw-animate-css`).
@@ -39,7 +42,3 @@
 - `npm run build` / `npm run preview` / `npm run start`.
 - `npm run lint` / `npm run format` / `npm run check`.
 - `npm run db:generate` / `db:push` / `db:migrate` / `db:studio` / `db:seed`.
-
-## À confirmer avec l'utilisateur avant de généraliser
-- Fournisseur de paiement : **K-Pay** (`provider: "KPAY"`, devise **XAF**) — confirmer si c'est le seul moyen (pas de Stripe/carte pour l'instant).
-- Source de vérité des articles : Strapi vs Prisma `Post` (voir `08-decisions-log.md`).
