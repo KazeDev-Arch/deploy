@@ -18,6 +18,7 @@ import { Route as ApiInngestRouteImport } from './routes/api/inngest'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
+import { Route as AuthVerifyOtpRouteImport } from './routes/auth/verify-otp'
 import { Route as DemoBetterAuthRouteImport } from './routes/demo/better-auth'
 import { Route as DemoPrismaRouteImport } from './routes/demo/prisma'
 import { Route as DemoStrapiRouteImport } from './routes/demo/strapi'
@@ -74,6 +75,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
 const AuthSignupRoute = AuthSignupRouteImport.update({
   id: '/auth/signup',
   path: '/auth/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthVerifyOtpRoute = AuthVerifyOtpRouteImport.update({
+  id: '/auth/verify-otp',
+  path: '/auth/verify-otp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoBetterAuthRoute = DemoBetterAuthRouteImport.update({
@@ -146,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/auth/verify-otp': typeof AuthVerifyOtpRoute
   '/demo/better-auth': typeof DemoBetterAuthRoute
   '/demo/prisma': typeof DemoPrismaRoute
   '/demo/strapi': typeof DemoStrapiRouteWithChildren
@@ -169,6 +176,7 @@ export interface FileRoutesByTo {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/auth/verify-otp': typeof AuthVerifyOtpRoute
   '/demo/better-auth': typeof DemoBetterAuthRoute
   '/demo/prisma': typeof DemoPrismaRoute
   '/demo/strapi': typeof DemoStrapiRouteWithChildren
@@ -193,6 +201,7 @@ export interface FileRoutesById {
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/auth/verify-otp': typeof AuthVerifyOtpRoute
   '/demo/better-auth': typeof DemoBetterAuthRoute
   '/demo/prisma': typeof DemoPrismaRoute
   '/demo/strapi': typeof DemoStrapiRouteWithChildren
@@ -218,6 +227,7 @@ export interface FileRouteTypes {
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
+    | '/auth/verify-otp'
     | '/demo/better-auth'
     | '/demo/prisma'
     | '/demo/strapi'
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
+    | '/auth/verify-otp'
     | '/demo/better-auth'
     | '/demo/prisma'
     | '/demo/strapi'
@@ -264,6 +275,7 @@ export interface FileRouteTypes {
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
+    | '/auth/verify-otp'
     | '/demo/better-auth'
     | '/demo/prisma'
     | '/demo/strapi'
@@ -288,6 +300,7 @@ export interface RootRouteChildren {
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
+  AuthVerifyOtpRoute: typeof AuthVerifyOtpRoute
   DemoBetterAuthRoute: typeof DemoBetterAuthRoute
   DemoPrismaRoute: typeof DemoPrismaRoute
   DemoStrapiRoute: typeof DemoStrapiRouteWithChildren
@@ -365,6 +378,13 @@ declare module '@tanstack/react-router' {
       path: '/auth/signup'
       fullPath: '/auth/signup'
       preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/verify-otp': {
+      id: '/auth/verify-otp'
+      path: '/auth/verify-otp'
+      fullPath: '/auth/verify-otp'
+      preLoaderRoute: typeof AuthVerifyOtpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/better-auth': {
@@ -475,6 +495,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
+  AuthVerifyOtpRoute: AuthVerifyOtpRoute,
   DemoBetterAuthRoute: DemoBetterAuthRoute,
   DemoPrismaRoute: DemoPrismaRoute,
   DemoStrapiRoute: DemoStrapiRouteWithChildren,

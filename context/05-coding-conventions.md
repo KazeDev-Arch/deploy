@@ -69,9 +69,12 @@ src/data/loaders/schemas.ts           → schémas Zod partagés (client-safe)
 - `components/ui/` : primitives shadcn — pas de logique métier.
 - `components/<domaine>/` : UI spécifique à un écran/domaine.
 - `data/loaders/` : server functions d'accès aux données.
+- `mutations/` : server functions de mutation (écriture, mutations).
+- `hooks/` : tous les fichiers `*.hooks.ts` (hooks React, mutations TanStack Query, custom hooks).
+- `schemas/` : schémas Zod de validation.
 - `lib/` : utilitaires purs (pas de logique métier de domaine).
 - `integrations/` : wrappers d'intégrations tierces.
-- Ne jamais faire un appel DB/HTTP direct dans un composant — passer par `data/loaders/` ou `lib/`.
+- Ne jamais faire un appel DB/HTTP direct dans un composant — passer par `data/loaders/`, `mutations/` ou `lib/`.
 
 ## Règles shadcn (source : `.agents/skills/shadcn/rules/`)
 
@@ -108,7 +111,17 @@ src/data/loaders/schemas.ts           → schémas Zod partagés (client-safe)
 
 Vérifier qu'une lib déjà présente couvre le besoin (`04-tech-stack.md`). Demander confirmation avant d'ajouter une dépendance qui chevauche une capacité existante.
 
-## Constantes
+## Hooks
+
+Tout fichier `*.hooks.ts` (hooks React, mutations TanStack Query, custom hooks) doit vivre dans **`src/hooks/`**, pas colocalisé avec les composants ou les mutations.
+
+```
+src/hooks/auth.hooks.ts      → hooks d'authentification
+src/hooks/posts.hooks.ts     → hooks de gestion des articles
+src/hooks/comments.hooks.ts  → hooks de gestion des commentaires
+```
+
+Règle : un seul endroit pour chercher les hooks, quel que soit le domaine métier.
 
 Toute valeur constante partagée (URLs, seuils, mappings, valeurs par défaut) → un fichier dédié (`src/lib/` ou un module de constantes), pas dans le composant qui l'utilise. Exceptions : constantes purement locales à un composant.
 

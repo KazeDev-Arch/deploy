@@ -26,9 +26,5 @@ export function AdminProtection({ children }: AdminProtectionProps) {
     return <Navigate to="/auth/login" />
   }
 
-  if ((session.user as any).role !== 'ADMIN') {
-    return <Navigate to="/" />
-  }
-
   return <>{children}</>
 }

@@ -74,3 +74,13 @@ Format par entrée : **Contexte / Décision / Alternative écartée**. Toujours 
 - Respecter strictement les tokens shadcn (pas de couleurs codées en dur) et réutiliser les primitives de `src/components/ui/`.
 
 **Alternative écartée** : intégrer l'admin dans le même layout public (risque de fuites d'UI et complexité d'autorisation), ou exposer des routes admin sans protection robuste (inacceptable pour contenu premium et gestion des abonnements).
+
+---
+
+## 2026-09-02 — Fichiers hooks centralisés dans `src/hooks/`
+
+**Contexte** : lors de la refactorisation de l'authentification, les hooks de mutation (`auth.hooks.ts`) ont d'abord été placés à côté des mutations (`src/data/mutations/`). Cela fragmentait la localisation des hooks dans le projet.
+
+**Décision** : tous les fichiers `*.hooks.ts` (hooks React, mutations TanStack Query, custom hooks) doivent vivre dans **`src/hooks/`**, quel que soit le domaine métier. Un seul endroit pour chercher les hooks.
+
+**Alternative écartée** : colocaliser les hooks avec les composants ou les mutations qu'ils utilisent (fragmentation, difficulté à retrouver un hook).

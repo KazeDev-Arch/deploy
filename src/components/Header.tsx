@@ -1,5 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from './ui/button'
+import { authClient } from '#/lib/auth-client'
+
 
 const NAV = [
   { label: 'À la une', href: '#a-la-une' },
@@ -8,6 +10,8 @@ const NAV = [
 ]
 
 export default function Header() {
+  const { data: session } = authClient.useSession()
+
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-lg">
       <nav className="page-wrap flex items-center gap-8 py-3.5">
@@ -33,14 +37,25 @@ export default function Header() {
         </div>
 
         <div className="ml-auto flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className="hidden text-muted-foreground hover:text-foreground sm:inline-flex"
-          >
-            <Link to="/auth/login">Se connecter</Link>
-          </Button>
+          {!session?.user ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="hidden text-muted-foreground hover:text-foreground sm:inline-flex"
+            >
+              <Link to="/auth/login">Se connecter</Link>
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="hidden text-muted-foreground hover:text-foreground sm:inline-flex"
+            >
+              <Link to="/admin">Tableau de bord</Link>
+            </Button>
+          )}
           <Button size="sm" asChild>
             <a href="#abonnement">S’abonner</a>
           </Button>

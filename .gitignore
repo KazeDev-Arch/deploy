@@ -15,4 +15,5 @@ todos.json
 .idea
 .vscode
 .freebuff
+/src/.freebuff
 
