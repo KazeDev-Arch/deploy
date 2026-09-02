@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminArticlesRouteImport } from './routes/admin/articles'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as ApiInngestRouteImport } from './routes/api/inngest'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
@@ -53,6 +54,11 @@ const AdminArticlesRoute = AdminArticlesRouteImport.update({
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/admin/settings',
   path: '/admin/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiInngestRoute = ApiInngestRouteImport.update({
+  id: '/api/inngest',
+  path: '/api/inngest',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin/articles': typeof AdminArticlesRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/api/inngest': typeof ApiInngestRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -158,6 +165,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/admin/articles': typeof AdminArticlesRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/api/inngest': typeof ApiInngestRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin/articles': typeof AdminArticlesRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/api/inngest': typeof ApiInngestRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin/articles'
     | '/admin/settings'
+    | '/api/inngest'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
@@ -227,6 +237,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin/articles'
     | '/admin/settings'
+    | '/api/inngest'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
@@ -249,6 +260,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin/articles'
     | '/admin/settings'
+    | '/api/inngest'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
@@ -272,6 +284,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminArticlesRoute: typeof AdminArticlesRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
+  ApiInngestRoute: typeof ApiInngestRoute
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
@@ -324,6 +337,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/settings'
       fullPath: '/admin/settings'
       preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/inngest': {
+      id: '/api/inngest'
+      path: '/api/inngest'
+      fullPath: '/api/inngest'
+      preLoaderRoute: typeof ApiInngestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/forgot-password': {
@@ -451,6 +471,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminArticlesRoute: AdminArticlesRoute,
   AdminSettingsRoute: AdminSettingsRoute,
+  ApiInngestRoute: ApiInngestRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,

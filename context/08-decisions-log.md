@@ -59,5 +59,18 @@ Format par entrée : **Contexte / Décision / Alternative écartée**. Toujours 
 - **Schéma Prisma** : ajouter obligatoirement les trois modèles exigés par Better Auth : `Account` (identités sociales), `Session` (sessions utilisateur), `VerificationToken` (jetons d'auth email).
 - **Workflow** : après mise à jour du schéma, toujours exécuter `npm run db:migrate` avant `npx auth@latest generate`.
 
-**Alternative écartée** : utiliser l'adaptateur mémoire de Better Auth pour le développement (ne fonctionne pas avec la généération de schéma).
+**Alternative écartée** : utiliser l'adaptateur mémoire de Better Auth pour le développement (ne fonctionne pas avec la génération de schéma).
 
+---
+
+## 2026-09-02 — Création d'un template Admin (dashboard) séparé
+
+**Contexte** : besoin d'une interface d'administration basique (template) séparée du site public. L'admin doit être accessible uniquement aux utilisateurs authentifiés avec le rôle `ADMIN`. Le design doit rester conforme au design system noir & blanc (shadcn) et les composants réutilisables doivent vivre dans `src/components/admin/`.
+
+**Décision** :
+- Créer un nouveau segment de routes `src/routes/admin/` contenant `index.tsx`, `articles.tsx`, `settings.tsx`.
+- Implémenter un `AdminLayout` (navbar + sidebar) et des composants `AdminNavbar`, `AdminSidebar`, `AdminProtection` dans `src/components/admin/`.
+- Protéger l'accès via Better Auth (vérifier rôle `ADMIN`) ; côté serveur ou client selon le besoin, mais l'interface doit rediriger les non-autorisés vers `/auth/login` ou `/`.
+- Respecter strictement les tokens shadcn (pas de couleurs codées en dur) et réutiliser les primitives de `src/components/ui/`.
+
+**Alternative écartée** : intégrer l'admin dans le même layout public (risque de fuites d'UI et complexité d'autorisation), ou exposer des routes admin sans protection robuste (inacceptable pour contenu premium et gestion des abonnements).
