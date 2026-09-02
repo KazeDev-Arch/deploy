@@ -50,6 +50,7 @@ export const createComment = createServerFn({ method: 'POST' })
 ```
 
 - Côté composant, wrapper une mutation avec `useServerFn()` (TanStack Query) plutôt qu'appeler la server function brute.
+- **Pattern mutation** : server function dans `mutations/` (logique métier) → hook dans `hooks/` (`useServerFn` + `useMutation` + toast + navigation) → composant (purement présentation).
 
 ## Pattern 3-fichiers (docs TanStack Start)
 
@@ -94,6 +95,13 @@ src/data/loaders/schemas.ts           → schémas Zod partagés (client-safe)
 
 - Pas de couleur/police codée en dur hors des tokens définis dans `02-design-system.md`.
 - Réutiliser les primitives de `components/ui/` avant d'en créer de nouvelles.
+
+## Variables d'environnement
+
+- `src/env.ts` utilise `@t3-oss/env-core` avec **`runtimeEnv: process.env`** (pas `import.meta.env`). En Vite SSR, `process.env` contient toutes les vars, `import.meta.env` ne contient que les `VITE_`.
+- Vars serveur (`GOOGLE_CLIENT_ID`, `RESEND_API_KEY`, etc.) : dans `server:` du schema, `process.env`.
+- Vars client (`VITE_*`) : dans `client:` du schema, lues depuis `process.env` via `clientPrefix: 'VITE_'`.
+- Les vars optionnelles utilisent `.optional()` — le serveur démarre sans elles, les fonctionnalités correspondantes sont désactivées.
 
 ## Prisma & base de données
 

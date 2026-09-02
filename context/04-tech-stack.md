@@ -7,13 +7,15 @@
 - **React 19** / **React DOM 19**.
 
 ## Données & état
-- **TanStack Query** (fetching, cache, mutations).
+- **TanStack Query** (fetching, cache, mutations via `useServerFn` + `useMutation`).
 - **TanStack Form** (formulaires).
 - **TanStack Table** (tableaux).
 
 ## Backend & base de données
 - **PostgreSQL** via **Prisma 7** + **@prisma/adapter-pg** (client généré dans `src/generated/prisma`).
-- **better-auth** (authentification email/mot de passe + `tanstackStartCookies`).
+- **better-auth** (authentification email/mot de passe + Google OAuth + `tanstackStartCookies`).
+- **Inngest** (background jobs, envoi d'emails OTP).
+- **Resend** (envoi d'emails transactionnels).
 - **Strapi** (headless CMS) via `@strapi/client` — **legacy** : les articles migrent vers Prisma `Post` (voir `08-decisions-log.md`).
 
 ## Paiement
@@ -22,6 +24,7 @@
 ## UI & styles
 - **Tailwind CSS v4** (`@tailwindcss/vite` + `@tailwindcss/typography` + `tw-animate-css`).
 - **shadcn/ui** (base `radix`, style `new-york`, `baseColor` zinc) : `class-variance-authority`, `clsx`, `tailwind-merge`, `radix-ui`, `lucide-react`.
+- **sonner** (notifications toast, utilisé pour les retours success/error).
 - **react-markdown** + **remark-gfm** (rendu Markdown des articles).
 
 ## Validation & types

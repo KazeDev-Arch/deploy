@@ -84,3 +84,30 @@ Format par entrée : **Contexte / Décision / Alternative écartée**. Toujours 
 **Décision** : tous les fichiers `*.hooks.ts` (hooks React, mutations TanStack Query, custom hooks) doivent vivre dans **`src/hooks/`**, quel que soit le domaine métier. Un seul endroit pour chercher les hooks.
 
 **Alternative écartée** : colocaliser les hooks avec les composants ou les mutations qu'ils utilisent (fragmentation, difficulté à retrouver un hook).
+
+---
+
+## 2026-09-02 — Authentification : Google OAuth + OTP email (Inngest + Resend)
+
+**Contexte** : les formulaires login/signup existants étaient statiques (pas de logique auth). Besoin d'ajouter Google OAuth et de vérifier l'email des nouveaux utilisateurs via OTP.
+
+**Décision** :
+- **Google OAuth** : configurer `socialProviders.google` dans Better Auth avec `clientId`/`clientSecret` + `baseURL` obligatoire.
+- **OTP email** : flux custom — inscription crée le compte (`emailVerified: false`), génère un code 6 chiffres (10 min), envoie via Inngest → Resend. L'utilisateur vérifie sur `/auth/verify-otp`.
+- **Email template** : HTML inline, style monochrome Deploy (noir/blanc, tokens shadcn).
+- **Séparation des responsabilités** : server functions (`mutations/auth.ts`) = logique métier ; hooks (`hooks/auth.hooks.ts`) = `useServerFn` + `useMutation` + toast + navigation ; composants = purement présentation.
+- **Toasts** : sonner pour les notifications success/error.
+
+**Alternative écartée** :
+- Utiliser le plugin OTP built-in de Better Auth (moins de contrôle sur le template email).
+- Gérer les erreurs/redirects dans les composants (mélange UI/logique métier).
+
+---
+
+## 2026-09-02 — `runtimeEnv` doit être `process.env` (pas `import.meta.env`)
+
+**Contexte** : avec `@t3-oss/env-core` dans TanStack Start (Vite), les variables serveur (`GOOGLE_CLIENT_ID`, etc.) n'étaient pas lues car `import.meta.env` ne contient que les vars `VITE_`.
+
+**Décision** : `runtimeEnv: process.env` dans `src/env.ts`. En Vite SSR, `process.env` contient toutes les vars (y compris `VITE_`), tandis que `import.meta.env` ne contient que les `VITE_`.
+
+**Alternative écartée** : créer deux instances `createEnv` séparées (une serveur, une client) — surcomplication.

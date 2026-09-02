@@ -5,7 +5,7 @@ import { otpVerificationEmail } from '../emails/otp-verification.ts'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? 'Deploy <noreply@deploy.app>'
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? 'Deploy <onboarding@resend.dev>'
 
 export const sendOtpEmail = inngest.createFunction(
   {
