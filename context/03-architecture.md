@@ -5,11 +5,12 @@ Arborescence réelle sous `src/` (à date) :
 ```
 src/
 ├── routes/                 → routing par fichiers (TanStack Router)
-│   ├── __root.tsx          → coquille du document (shell : <html>, Header, Footer, <Scripts>)
-│   ├── index.tsx           → accueil
-│   ├── about.tsx
-│   ├── login.tsx / signup.tsx / forgot-password.tsx
-│   └── api/auth/$.ts       → endpoint better-auth
+│   ├── __root.tsx          → coquille du document (<html>, <HeadContent>, <Scripts>)
+│   ├── _public.tsx         → layout public (Header + Footer)
+│   ├── _public/            → index, about, posts/, auth/, demo/
+│   ├── _dashboard.tsx      → layout panneau partagé client/admin (auth obligatoire)
+│   ├── _dashboard/admin/   → index, articles, comments, subscribers, payments, settings
+│   └── api/                → auth/$.ts (better-auth), inngest.ts
 ├── router.tsx              → createRouter + intégration SSR Query
 ├── routeTree.gen.ts        → GÉNÉRÉ (ne pas éditer)
 ├── components/
@@ -19,11 +20,13 @@ src/
 │   ├── auth/               → UI d'authentification (auth-shell)
 │   └── (Header.tsx, Footer.tsx, article-card.tsx, markdown-content.tsx, pagination.tsx, search.tsx, strapi-image.tsx)
 ├── data/
-│   ├── loaders/            → server functions d'accès aux données (articles.ts, index.ts)
-│   └── strapi-sdk.ts       → client SDK Strapi
+│   ├── loaders/            → LEGACY (Strapi) — ne plus y ajouter de server function
+│   └── strapi-sdk.ts       → client SDK Strapi (legacy)
+├── mutations/              → TOUTES les server functions (createServerFn), lecture + écriture
+├── schemas/                → schémas Zod de validation
 ├── integrations/           → intégrations tierces (better-auth/, tanstack-query/)
-├── lib/                    → utilitaires (auth.ts, auth-client.ts, utils.ts, strapi-utils.ts)
-├── hooks/                  → hooks partagés
+├── lib/                    → utilitaires (auth.ts, auth-client.ts, auth-guard.ts, permissions.ts, utils.ts)
+├── hooks/                  → hooks + gestion de l'UI (toasts, navigation, invalidation)
 ├── types/                  → types partagés (strapi.ts, ...)
 ├── generated/prisma/       → client Prisma GÉNÉRÉ (ne pas éditer)
 ├── env.ts                  → validation d'env (@t3-oss/env-core)
@@ -34,14 +37,14 @@ src/
 ## Flux de données (TanStack Start)
 
 1. **Chargement serveur** : `loader` dans le fichier route (`createFileRoute('/...')({ loader })`).
-2. **Appels depuis le client** : **server functions** (`createServerFn`) exportées depuis `src/data/loaders/`, appelées via `useServerFn()` ou directement dans les loaders.
+2. **Appels depuis le client** : **server functions** (`createServerFn`) exportées depuis `src/mutations/`, appelées via `useServerFn()` (wrappées dans un hook de `src/hooks/`).
 3. **Accès base** : Prisma (auth, posts, abonnements, paiements, commentaires, likes) via `src/lib/` et `src/db.ts`.
 4. **Contenu éditorial** : Strapi (headless CMS) via `src/data/strapi-sdk.ts` — les articles exposent des **blocs de contenu** rendus par `src/components/blocks/`.
 
 ## Où créer un nouveau code (règles)
 
 - **Route** : nouveau fichier dans `src/routes/` (`createFileRoute`), composant colocalisé ou réexporté depuis `components/<domaine>/`.
-- **Server function** : `src/data/loaders/<domaine>.ts` (+ export dans `index.ts`) ; pattern 3-fichiers si ça grossit (`.functions.ts` / `.server.ts` / `schemas.ts`).
+- **Server function** : `src/mutations/<domaine>.ts` (toutes les « actions » / requêtes serveur, lecture et écriture) ; pattern 3-fichiers si ça grossit (`.functions.ts` / `.server.ts` / `schemas.ts` dans `src/schemas/`).
 - **Primitive UI** : `src/components/ui/` (shadcn, via `npx shadcn@latest add ...`).
 - **Composant d'écran/domaine** : `src/components/<domaine>/`.
 - **Utilitaires** : `src/lib/`.

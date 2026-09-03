@@ -1,9 +1,15 @@
+import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { FileText, Plus } from 'lucide-react'
 
 import { PageHeader, RequireRole } from '#/components/admin'
-import { Button } from '#/components/ui/button'
-import { Card } from '#/components/ui/card'
+import {
+  ArticleFormDialog,
+  ArticlesTable,
+  DeleteArticleDialog,
+} from '#/components/admin/articles'
+import { Skeleton } from '#/components/ui/skeleton'
+import { useListPosts } from '#/hooks/post.hooks'
+import type { PostListItem } from '#/hooks/post.hooks'
 
 export const Route = createFileRoute('/_dashboard/admin/articles')({
   component: AdminArticles,
@@ -12,34 +18,57 @@ export const Route = createFileRoute('/_dashboard/admin/articles')({
 function AdminArticles() {
   return (
     <RequireRole role="ADMIN">
+      <ArticlesManager />
+    </RequireRole>
+  )
+}
+
+function ArticlesManager() {
+  const listPostsQuery = useListPosts()
+  const posts = listPostsQuery.data ?? []
+
+  const [formOpen, setFormOpen] = useState(false)
+  const [editingPost, setEditingPost] = useState<PostListItem | null>(null)
+  const [deletingPost, setDeletingPost] = useState<PostListItem | null>(null)
+
+  return (
+    <>
       <PageHeader
         title="Articles"
         description="Rédigez, mettez à jour et publiez les articles de la rédaction (brouillon → publié)."
-      >
-        <Button size="sm" data-icon="inline-start">
-          <Plus />
-          Nouvel article
-        </Button>
-      </PageHeader>
+      />
 
-      <Card className="flex flex-col items-center gap-4 p-12 text-center">
-        <div className="grid size-10 place-items-center rounded-md bg-muted">
-          <FileText className="size-5 text-muted-foreground" />
+      {listPostsQuery.isPending ? (
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-9 w-full" />
+          <Skeleton className="h-9 w-full" />
+          <Skeleton className="h-9 w-full" />
         </div>
-        <div className="flex flex-col gap-1">
-          <p className="font-medium">Aucun article pour le moment</p>
-          <p className="text-sm text-muted-foreground">
-            Les articles que vous créez apparaîtront ici, avec leur statut
-            (brouillon / publié) et leur accès (gratuit / premium).
-          </p>
-        </div>
-      </Card>
+      ) : (
+        <ArticlesTable
+          data={posts}
+          onCreate={() => {
+            setEditingPost(null)
+            setFormOpen(true)
+          }}
+          onEdit={(post) => {
+            setEditingPost(post)
+            setFormOpen(true)
+          }}
+          onDelete={(post) => setDeletingPost(post)}
+        />
+      )}
 
-      {/* TODO: table de gestion — TanStack Table + mutations article. */}
-      <p className="text-xs text-muted-foreground">
-        La liste complète (recherche, filtres, pagination) arrivera avec le CRUD
-        des articles.
-      </p>
-    </RequireRole>
+      <ArticleFormDialog
+        open={formOpen}
+        onOpenChange={setFormOpen}
+        post={editingPost}
+      />
+
+      <DeleteArticleDialog
+        post={deletingPost}
+        onClose={() => setDeletingPost(null)}
+      />
+    </>
   )
 }

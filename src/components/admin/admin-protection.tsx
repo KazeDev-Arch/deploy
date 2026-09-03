@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition -- better-auth useSession type is mis-modeled by typescript-eslint (TS6); tsc --noEmit stays the gate. */
 import type { ReactNode } from 'react'
 import { Navigate } from '@tanstack/react-router'
+import { Forbidden } from '#/components/errors/forbidden'
 import { authClient } from '#/lib/auth-client'
 import type { AppRole } from '#/lib/permissions'
 
@@ -46,7 +47,7 @@ export function RequireRole({
   }
 
   if ((session?.user?.role as AppRole | undefined) !== role) {
-    return <Navigate to="/admin" replace />
+    return <Forbidden />
   }
 
   return <>{children}</>

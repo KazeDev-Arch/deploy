@@ -39,7 +39,7 @@ export const Route = createFileRoute('/articles')({
 })
 ```
 
-- **Server function** (`createServerFn`) : logique serveur appelable **depuis le client** (fetch, mutations, accès DB). Toujours valider l'input (Zod) :
+- **Server function** (`createServerFn`) : logique serveur appelable **depuis le client** (fetch, mutations, accès DB). Toujours valider l'input (Zod). **Toutes** les server functions (lecture **et** écriture) vivent **exclusivement** dans `src/mutations/` :
 
 ```ts
 export const createComment = createServerFn({ method: 'POST' })
@@ -49,17 +49,18 @@ export const createComment = createServerFn({ method: 'POST' })
   })
 ```
 
-- Côté composant, wrapper une mutation avec `useServerFn()` (TanStack Query) plutôt qu'appeler la server function brute.
-- **Pattern mutation** : server function dans `mutations/` (logique métier) → hook dans `hooks/` (`useServerFn` + `useMutation` + toast + navigation) → composant (purement présentation).
+- Côté composant, ne jamais appeler une server function brute : passer par un hook.
+- **Pattern action → hook → composant** : server function dans `mutations/` (logique métier) → hook dédié dans `hooks/` (gestion de l'UI : `useServerFn` + `useQuery`/`useMutation` + toast + navigation + invalidation) → composant (purement présentation).
+- **Convention d'appel** : une server function s'appelle avec l'enveloppe `{ data: <input> }` (ex. `mutation.mutate({ data: values })`), **pas** l'input directement — c'est la signature du fetcher retourné par `useServerFn`. En `onSuccess`, l'input se lit dans `variables.data`.
 
 ## Pattern 3-fichiers (docs TanStack Start)
 
 Quand une capacité grossit, séparer :
 
 ```
-src/data/loaders/users.functions.ts   → createServerFn (importable partout)
-src/data/loaders/users.server.ts      → helpers serveur uniquement (DB, logique interne)
-src/data/loaders/schemas.ts           → schémas Zod partagés (client-safe)
+src/mutations/users.functions.ts   → createServerFn (importable partout)
+src/mutations/users.server.ts      → helpers serveur uniquement (DB, logique interne)
+src/schemas/users.ts               → schémas Zod partagés (client-safe)
 ```
 
 - `.server.ts` n'est importé **que** dans les handlers des server functions.
@@ -69,13 +70,13 @@ src/data/loaders/schemas.ts           → schémas Zod partagés (client-safe)
 
 - `components/ui/` : primitives shadcn — pas de logique métier.
 - `components/<domaine>/` : UI spécifique à un écran/domaine.
-- `data/loaders/` : server functions d'accès aux données.
-- `mutations/` : server functions de mutation (écriture, mutations).
-- `hooks/` : tous les fichiers `*.hooks.ts` (hooks React, mutations TanStack Query, custom hooks).
+- `mutations/` : **toutes** les server functions (`createServerFn`), lecture et écriture. C'est l'unique emplacement des « actions » (requêtes serveur).
+- `hooks/` : tous les fichiers `*.hooks.ts` (hooks React, `useQuery`/`useMutation`, custom hooks) — **gestion de l'UI** : toasts, navigation, invalidation de cache.
 - `schemas/` : schémas Zod de validation.
 - `lib/` : utilitaires purs (pas de logique métier de domaine).
 - `integrations/` : wrappers d'intégrations tierces.
-- Ne jamais faire un appel DB/HTTP direct dans un composant — passer par `data/loaders/`, `mutations/` ou `lib/`.
+- `data/loaders/` : **legacy** (Strapi) — ne plus y ajouter de server function ; migrer vers `mutations/`.
+- Ne jamais faire un appel DB/HTTP direct dans un composant — passer par `mutations/` ou `lib/`.
 
 ## Règles shadcn (source : `.agents/skills/shadcn/rules/`)
 
@@ -83,7 +84,7 @@ src/data/loaders/schemas.ts           → schémas Zod partagés (client-safe)
 - **Tokens sémantiques** : `bg-primary`, `text-muted-foreground` — jamais de couleurs brutes.
 - **`cn()`** pour les classes conditionnelles (`#/lib/utils`), pas de ternaires de template literal.
 - **`gap-*`**, pas `space-x-*`/`space-y-*`. `size-*` quand largeur = hauteur.
-- **Formulaires** : `FieldGroup` + `Field` (pas de `div` + `Label`). Validation : `data-invalid` sur le `Field`, `aria-invalid` sur le contrôle.
+- **Formulaires** : `FieldGroup` + `Field` (pas de `div` + `Label`). Validation : `data-invalid` sur le `Field`, `aria-invalid` sur le contrôle. ⚠️ Ces primitives (`FieldGroup`/`Field`/`InputGroup`) ne sont **pas installées** dans ce repo : l'existant utilise des wrappers locaux (`AuthField`/`AuthFieldGroup` dans `components/auth/auth-shell.tsx`) + `Label` + inputs contrôlés, validation côté serveur (Zod) + toast. Le code existant fait foi.
 - **Icônes** : `data-icon="inline-start|inline-end"`, pas de classes de taille sur l'icône.
 - **`Skeleton`** pour le chargement, **`Empty`** pour les états vides, **`Separator`** (pas `<hr>`), **`Badge`** (pas de `<span>` stylé).
 - **`Button` n'a pas `isPending`/`isLoading`** : composer `Spinner` + `data-icon` + `disabled`.
@@ -121,7 +122,7 @@ Vérifier qu'une lib déjà présente couvre le besoin (`04-tech-stack.md`). Dem
 
 ## Hooks
 
-Tout fichier `*.hooks.ts` (hooks React, mutations TanStack Query, custom hooks) doit vivre dans **`src/hooks/`**, pas colocalisé avec les composants ou les mutations.
+Tout fichier `*.hooks.ts` (hooks React, queries/mutations TanStack Query, custom hooks) doit vivre dans **`src/hooks/`**, pas colocalisé avec les composants ou les mutations. C'est le hook qui porte la **gestion de l'UI** (toasts, navigation, invalidation de cache) ; le composant reste purement présentation.
 
 ```
 src/hooks/auth.hooks.ts      → hooks d'authentification

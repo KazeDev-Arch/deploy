@@ -37,9 +37,7 @@ export const adminRole = ac.newRole({
   settings: ['read', 'update'],
 })
 
-export const clientRole = ac.newRole({
-  article: ['read'],
-})
+export const clientRole = ac.newRole({})
 
 /** Mappage AppRole → rôle better-auth (pour `.authorize()` côté serveur). */
 export const ROLE_TO_ACCESS_ROLE = {

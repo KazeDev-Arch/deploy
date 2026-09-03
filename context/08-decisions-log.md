@@ -140,3 +140,22 @@ Format par entrée : **Contexte / Décision / Alternative écartée**. Toujours 
 - Sessions typées avec le champ `role` : plugin client `inferAdditionalFields<typeof auth>()` dans `src/lib/auth-client.ts`.
 
 **Alternative écartée** : garder l'ancien template (navbar + sidebar maison) et l'ancien `AdminProtection` sans contrôle de rôle (un `CLIENT` aurait pu ouvrir `/admin/articles`), ou dupliquer la logique de permission dans chaque composant.
+
+## 2026-09-03 — Toutes les server functions vivent dans `mutations/`
+
+**Contexte** : le code répartissait les server functions entre `src/data/loaders/` (lectures) et `src/mutations/` (écritures), ce qui fragmentait la localisation des « actions » (requêtes serveur). En parallèle, la gestion de l'UI (toasts, navigation, invalidation) risquait de fuiter dans les composants.
+
+**Décision** :
+- **Toutes** les server functions (`createServerFn`) — lecture **et** écriture — vivent **exclusivement** dans `src/mutations/`. C'est l'unique emplacement des « actions ».
+- La **gestion de l'UI** (wrapping `useServerFn` + `useQuery`/`useMutation`, toasts, navigation, invalidation de cache) est portée par un **hook dédié** dans `src/hooks/` (`<domaine>.hooks.ts`). Le composant reste purement présentation.
+- `src/data/loaders/` est marqué **legacy** (Strapi) : ne plus y ajouter de server function, migrer vers `mutations/`.
+
+**Alternative écartée** : garder la séparation lecture/écriture entre `data/loaders/` et `mutations/` (deux endroits pour chercher une server function), ou gérer toasts/navigation directement dans les composants.
+
+## 2026-09-03 — `clientRole` vide : le RBAC ne couvre que la gestion, pas la lecture publique
+
+**Contexte** : `clientRole` était défini comme `article: ['read']`, ce qui rendait `canAccess('CLIENT', 'article', 'read')` vrai et affichait le groupe « Administration › Articles » dans la sidebar pour un `CLIENT` — une entrée qu'il ne peut de toute façon pas ouvrir.
+
+**Décision** : `clientRole = ac.newRole({})`. Le catalogue RBAC de `permissions.ts` régit les capacités de **gestion** du panneau ; la lecture publique des articles (gratuits/premium) est une autre couche (paywall). Un `CLIENT` n'a donc **aucune** capacité de gestion, et ne voit que « Tableau de bord ».
+
+**Alternative écartée** : garder `article.read` sur le client (fuitait dans le menu admin), ou corriger uniquement le menu en exigeant `article.create` (cache le problème au lieu de le résoudre à la source).

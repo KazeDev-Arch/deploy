@@ -9,7 +9,7 @@
 ## Données & état
 - **TanStack Query** (fetching, cache, mutations via `useServerFn` + `useMutation`).
 - **TanStack Form** (formulaires).
-- **TanStack Table** (tableaux).
+- **TanStack Table** (tableaux) — **v9** : l'API v8 (`useReactTable`, `getCoreRowModel`, `flexRender`) n'existe plus, remplacée par `createCoreRowModel` / `ReactTable` / etc. Le fichier `src/routes/_public/demo/table.tsx` utilise encore l'ancienne API et est cassé. Pour une liste simple, l'approche manuelle (filtrage + pagination en état local) reste la plus sûre, cf. `components/admin/articles/articles-table.tsx`.
 
 ## Backend & base de données
 - **PostgreSQL** via **Prisma 7** + **@prisma/adapter-pg** (client généré dans `src/generated/prisma`).
