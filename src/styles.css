@@ -175,7 +175,11 @@ pre code {
 }
 
 .feature-card {
-  background: linear-gradient(165deg, color-mix(in oklab, var(--surface-strong) 93%, white 7%), var(--surface));
+  background: linear-gradient(
+    165deg,
+    color-mix(in oklab, var(--surface-strong) 93%, white 7%),
+    var(--surface)
+  );
   box-shadow:
     0 1px 0 var(--inset-glint) inset,
     0 18px 34px rgba(30, 90, 72, 0.1),
@@ -190,7 +194,10 @@ pre code {
 button,
 .island-shell,
 a {
-  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease,
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
     transform 180ms ease;
 }
 
@@ -261,11 +268,26 @@ a {
   }
   a {
     color: var(--foreground);
-    text-decoration-color: color-mix(in oklab, var(--foreground) 35%, transparent);
+    text-decoration-color: color-mix(
+      in oklab,
+      var(--foreground) 35%,
+      transparent
+    );
     text-decoration-thickness: 1px;
     text-underline-offset: 2px;
   }
   a:hover {
     color: var(--muted-foreground);
   }
+}
+
+.dark {
+  --sidebar: oklch(0.141 0.005 285.823);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.985 0 0);
+  --sidebar-primary-foreground: oklch(0.141 0.005 285.823);
+  --sidebar-accent: oklch(0.216 0.006 286.033);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0.007 286.031);
+  --sidebar-ring: oklch(0.705 0.015 286.067);
 }

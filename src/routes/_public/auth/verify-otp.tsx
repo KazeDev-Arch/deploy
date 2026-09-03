@@ -1,9 +1,5 @@
 import { useState } from 'react'
-import {
-  createFileRoute,
-  Link,
-  useSearch,
-} from '@tanstack/react-router'
+import { createFileRoute, Link, useSearch } from '@tanstack/react-router'
 import { ArrowLeft, CheckCircle, Mail } from 'lucide-react'
 
 import { AuthShell } from '#/components/auth/auth-shell.tsx'
@@ -19,15 +15,15 @@ import {
   useResendOtpMutation,
 } from '#/hooks/auth.hooks.ts'
 
-export const Route = createFileRoute('/auth/verify-otp')({
+export const Route = createFileRoute('/_public/auth/verify-otp')({
   component: VerifyOtp,
   validateSearch: (search: Record<string, unknown>) => ({
-    email: (search.email as string) ?? '',
+    email: typeof search.email === 'string' ? search.email : '',
   }),
 })
 
 function VerifyOtp() {
-  const { email } = useSearch({ from: '/auth/verify-otp' })
+  const { email } = useSearch({ from: '/_public/auth/verify-otp' })
   const [code, setCode] = useState('')
 
   const verifyMutation = useVerifyOtpMutation()

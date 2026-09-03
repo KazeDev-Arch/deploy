@@ -2,20 +2,18 @@ import { useMemo, useState } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 
-import { ArticleCard } from '../../components/article-card'
-import { PostsHero } from '../../components/posts/posts-hero'
-import { PostsRanking } from '../../components/posts/posts-ranking'
-import {
-  PostsToolbar
-} from '../../components/posts/posts-toolbar'
-import type {PremiumFilter} from '../../components/posts/posts-toolbar';
-import { Button } from '../../components/ui/button'
+import { ArticleCard } from '../../../components/article-card'
+import { PostsHero } from '../../../components/posts/posts-hero'
+import { PostsRanking } from '../../../components/posts/posts-ranking'
+import { PostsToolbar } from '../../../components/posts/posts-toolbar'
+import type { PremiumFilter } from '../../../components/posts/posts-toolbar'
+import { Button } from '../../../components/ui/button'
 
 import { posts } from '#/data/posts.ts'
 
 const PAGE_SIZE = 9
 
-export const Route = createFileRoute('/posts/')({
+export const Route = createFileRoute('/_public/posts/')({
   component: PostsPage,
 })
 

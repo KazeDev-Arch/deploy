@@ -9,221 +9,266 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as AdminArticlesRouteImport } from './routes/admin/articles'
-import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as DashboardRouteImport } from './routes/_dashboard'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicAboutRouteImport } from './routes/_public/about'
 import { Route as ApiInngestRouteImport } from './routes/api/inngest'
-import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
-import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as AuthSignupRouteImport } from './routes/auth/signup'
-import { Route as AuthVerifyOtpRouteImport } from './routes/auth/verify-otp'
-import { Route as DemoBetterAuthRouteImport } from './routes/demo/better-auth'
-import { Route as DemoPrismaRouteImport } from './routes/demo/prisma'
-import { Route as DemoStrapiRouteImport } from './routes/demo/strapi'
-import { Route as DemoTableRouteImport } from './routes/demo/table'
-import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
-import { Route as PostsIndexRouteImport } from './routes/posts/index'
-import { Route as PostsPostIdRouteImport } from './routes/posts/$postId'
+import { Route as DashboardAdminIndexRouteImport } from './routes/_dashboard/admin/index'
+import { Route as DashboardAdminArticlesRouteImport } from './routes/_dashboard/admin/articles'
+import { Route as DashboardAdminCommentsRouteImport } from './routes/_dashboard/admin/comments'
+import { Route as DashboardAdminPaymentsRouteImport } from './routes/_dashboard/admin/payments'
+import { Route as DashboardAdminSettingsRouteImport } from './routes/_dashboard/admin/settings'
+import { Route as DashboardAdminSubscribersRouteImport } from './routes/_dashboard/admin/subscribers'
+import { Route as PublicAuthForgotPasswordRouteImport } from './routes/_public/auth/forgot-password'
+import { Route as PublicAuthLoginRouteImport } from './routes/_public/auth/login'
+import { Route as PublicAuthSignupRouteImport } from './routes/_public/auth/signup'
+import { Route as PublicAuthVerifyOtpRouteImport } from './routes/_public/auth/verify-otp'
+import { Route as PublicDemoBetterAuthRouteImport } from './routes/_public/demo/better-auth'
+import { Route as PublicDemoPrismaRouteImport } from './routes/_public/demo/prisma'
+import { Route as PublicDemoStrapiRouteImport } from './routes/_public/demo/strapi'
+import { Route as PublicDemoTableRouteImport } from './routes/_public/demo/table'
+import { Route as PublicDemoTanstackQueryRouteImport } from './routes/_public/demo/tanstack-query'
+import { Route as PublicPostsIndexRouteImport } from './routes/_public/posts/index'
+import { Route as PublicPostsPostIdRouteImport } from './routes/_public/posts/$postId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as DemoFormAddressRouteImport } from './routes/demo/form.address'
-import { Route as DemoFormSimpleRouteImport } from './routes/demo/form.simple'
-import { Route as DemoSentryTestingRouteImport } from './routes/demo/sentry.testing'
-import { Route as DemoStrapiArticleIdRouteImport } from './routes/demo/strapi.$articleId'
+import { Route as PublicDemoFormAddressRouteImport } from './routes/_public/demo/form.address'
+import { Route as PublicDemoFormSimpleRouteImport } from './routes/_public/demo/form.simple'
+import { Route as PublicDemoSentryTestingRouteImport } from './routes/_public/demo/sentry.testing'
+import { Route as PublicDemoStrapiArticleIdRouteImport } from './routes/_public/demo/strapi.$articleId'
 
-const IndexRoute = IndexRouteImport.update({
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/_dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const AboutRoute = AboutRouteImport.update({
+const PublicAboutRoute = PublicAboutRouteImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminArticlesRoute = AdminArticlesRouteImport.update({
-  id: '/admin/articles',
-  path: '/admin/articles',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminSettingsRoute = AdminSettingsRouteImport.update({
-  id: '/admin/settings',
-  path: '/admin/settings',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
 const ApiInngestRoute = ApiInngestRouteImport.update({
   id: '/api/inngest',
   path: '/api/inngest',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
-  id: '/auth/forgot-password',
-  path: '/auth/forgot-password',
-  getParentRoute: () => rootRouteImport,
+const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => DashboardRoute,
 } as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
+const DashboardAdminArticlesRoute = DashboardAdminArticlesRouteImport.update({
+  id: '/admin/articles',
+  path: '/admin/articles',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAdminCommentsRoute = DashboardAdminCommentsRouteImport.update({
+  id: '/admin/comments',
+  path: '/admin/comments',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAdminPaymentsRoute = DashboardAdminPaymentsRouteImport.update({
+  id: '/admin/payments',
+  path: '/admin/payments',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAdminSettingsRoute = DashboardAdminSettingsRouteImport.update({
+  id: '/admin/settings',
+  path: '/admin/settings',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAdminSubscribersRoute =
+  DashboardAdminSubscribersRouteImport.update({
+    id: '/admin/subscribers',
+    path: '/admin/subscribers',
+    getParentRoute: () => DashboardRoute,
+  } as any)
+const PublicAuthForgotPasswordRoute =
+  PublicAuthForgotPasswordRouteImport.update({
+    id: '/auth/forgot-password',
+    path: '/auth/forgot-password',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicAuthLoginRoute = PublicAuthLoginRouteImport.update({
   id: '/auth/login',
   path: '/auth/login',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const AuthSignupRoute = AuthSignupRouteImport.update({
+const PublicAuthSignupRoute = PublicAuthSignupRouteImport.update({
   id: '/auth/signup',
   path: '/auth/signup',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const AuthVerifyOtpRoute = AuthVerifyOtpRouteImport.update({
+const PublicAuthVerifyOtpRoute = PublicAuthVerifyOtpRouteImport.update({
   id: '/auth/verify-otp',
   path: '/auth/verify-otp',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const DemoBetterAuthRoute = DemoBetterAuthRouteImport.update({
+const PublicDemoBetterAuthRoute = PublicDemoBetterAuthRouteImport.update({
   id: '/demo/better-auth',
   path: '/demo/better-auth',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const DemoPrismaRoute = DemoPrismaRouteImport.update({
+const PublicDemoPrismaRoute = PublicDemoPrismaRouteImport.update({
   id: '/demo/prisma',
   path: '/demo/prisma',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const DemoStrapiRoute = DemoStrapiRouteImport.update({
+const PublicDemoStrapiRoute = PublicDemoStrapiRouteImport.update({
   id: '/demo/strapi',
   path: '/demo/strapi',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const DemoTableRoute = DemoTableRouteImport.update({
+const PublicDemoTableRoute = PublicDemoTableRouteImport.update({
   id: '/demo/table',
   path: '/demo/table',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
+const PublicDemoTanstackQueryRoute = PublicDemoTanstackQueryRouteImport.update({
   id: '/demo/tanstack-query',
   path: '/demo/tanstack-query',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const PostsIndexRoute = PostsIndexRouteImport.update({
+const PublicPostsIndexRoute = PublicPostsIndexRouteImport.update({
   id: '/posts/',
   path: '/posts/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const PostsPostIdRoute = PostsPostIdRouteImport.update({
+const PublicPostsPostIdRoute = PublicPostsPostIdRouteImport.update({
   id: '/posts/$postId',
   path: '/posts/$postId',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoFormAddressRoute = DemoFormAddressRouteImport.update({
+const PublicDemoFormAddressRoute = PublicDemoFormAddressRouteImport.update({
   id: '/demo/form/address',
   path: '/demo/form/address',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const DemoFormSimpleRoute = DemoFormSimpleRouteImport.update({
+const PublicDemoFormSimpleRoute = PublicDemoFormSimpleRouteImport.update({
   id: '/demo/form/simple',
   path: '/demo/form/simple',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const DemoSentryTestingRoute = DemoSentryTestingRouteImport.update({
+const PublicDemoSentryTestingRoute = PublicDemoSentryTestingRouteImport.update({
   id: '/demo/sentry/testing',
   path: '/demo/sentry/testing',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
-const DemoStrapiArticleIdRoute = DemoStrapiArticleIdRouteImport.update({
-  id: '/$articleId',
-  path: '/$articleId',
-  getParentRoute: () => DemoStrapiRoute,
-} as any)
+const PublicDemoStrapiArticleIdRoute =
+  PublicDemoStrapiArticleIdRouteImport.update({
+    id: '/$articleId',
+    path: '/$articleId',
+    getParentRoute: () => PublicDemoStrapiRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/admin/articles': typeof AdminArticlesRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/': typeof PublicIndexRoute
+  '/about': typeof PublicAboutRoute
   '/api/inngest': typeof ApiInngestRoute
-  '/auth/forgot-password': typeof AuthForgotPasswordRoute
-  '/auth/login': typeof AuthLoginRoute
-  '/auth/signup': typeof AuthSignupRoute
-  '/auth/verify-otp': typeof AuthVerifyOtpRoute
-  '/demo/better-auth': typeof DemoBetterAuthRoute
-  '/demo/prisma': typeof DemoPrismaRoute
-  '/demo/strapi': typeof DemoStrapiRouteWithChildren
-  '/demo/table': typeof DemoTableRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/posts/$postId': typeof PostsPostIdRoute
-  '/admin/': typeof AdminIndexRoute
-  '/posts/': typeof PostsIndexRoute
+  '/admin/articles': typeof DashboardAdminArticlesRoute
+  '/admin/comments': typeof DashboardAdminCommentsRoute
+  '/admin/payments': typeof DashboardAdminPaymentsRoute
+  '/admin/settings': typeof DashboardAdminSettingsRoute
+  '/admin/subscribers': typeof DashboardAdminSubscribersRoute
+  '/auth/forgot-password': typeof PublicAuthForgotPasswordRoute
+  '/auth/login': typeof PublicAuthLoginRoute
+  '/auth/signup': typeof PublicAuthSignupRoute
+  '/auth/verify-otp': typeof PublicAuthVerifyOtpRoute
+  '/demo/better-auth': typeof PublicDemoBetterAuthRoute
+  '/demo/prisma': typeof PublicDemoPrismaRoute
+  '/demo/strapi': typeof PublicDemoStrapiRouteWithChildren
+  '/demo/table': typeof PublicDemoTableRoute
+  '/demo/tanstack-query': typeof PublicDemoTanstackQueryRoute
+  '/posts/$postId': typeof PublicPostsPostIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/demo/sentry/testing': typeof DemoSentryTestingRoute
-  '/demo/strapi/$articleId': typeof DemoStrapiArticleIdRoute
+  '/admin/': typeof DashboardAdminIndexRoute
+  '/posts/': typeof PublicPostsIndexRoute
+  '/demo/form/address': typeof PublicDemoFormAddressRoute
+  '/demo/form/simple': typeof PublicDemoFormSimpleRoute
+  '/demo/sentry/testing': typeof PublicDemoSentryTestingRoute
+  '/demo/strapi/$articleId': typeof PublicDemoStrapiArticleIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/admin/articles': typeof AdminArticlesRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/': typeof PublicIndexRoute
+  '/about': typeof PublicAboutRoute
   '/api/inngest': typeof ApiInngestRoute
-  '/auth/forgot-password': typeof AuthForgotPasswordRoute
-  '/auth/login': typeof AuthLoginRoute
-  '/auth/signup': typeof AuthSignupRoute
-  '/auth/verify-otp': typeof AuthVerifyOtpRoute
-  '/demo/better-auth': typeof DemoBetterAuthRoute
-  '/demo/prisma': typeof DemoPrismaRoute
-  '/demo/strapi': typeof DemoStrapiRouteWithChildren
-  '/demo/table': typeof DemoTableRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/posts/$postId': typeof PostsPostIdRoute
-  '/admin': typeof AdminIndexRoute
-  '/posts': typeof PostsIndexRoute
+  '/admin/articles': typeof DashboardAdminArticlesRoute
+  '/admin/comments': typeof DashboardAdminCommentsRoute
+  '/admin/payments': typeof DashboardAdminPaymentsRoute
+  '/admin/settings': typeof DashboardAdminSettingsRoute
+  '/admin/subscribers': typeof DashboardAdminSubscribersRoute
+  '/auth/forgot-password': typeof PublicAuthForgotPasswordRoute
+  '/auth/login': typeof PublicAuthLoginRoute
+  '/auth/signup': typeof PublicAuthSignupRoute
+  '/auth/verify-otp': typeof PublicAuthVerifyOtpRoute
+  '/demo/better-auth': typeof PublicDemoBetterAuthRoute
+  '/demo/prisma': typeof PublicDemoPrismaRoute
+  '/demo/strapi': typeof PublicDemoStrapiRouteWithChildren
+  '/demo/table': typeof PublicDemoTableRoute
+  '/demo/tanstack-query': typeof PublicDemoTanstackQueryRoute
+  '/posts/$postId': typeof PublicPostsPostIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/demo/sentry/testing': typeof DemoSentryTestingRoute
-  '/demo/strapi/$articleId': typeof DemoStrapiArticleIdRoute
+  '/admin': typeof DashboardAdminIndexRoute
+  '/posts': typeof PublicPostsIndexRoute
+  '/demo/form/address': typeof PublicDemoFormAddressRoute
+  '/demo/form/simple': typeof PublicDemoFormSimpleRoute
+  '/demo/sentry/testing': typeof PublicDemoSentryTestingRoute
+  '/demo/strapi/$articleId': typeof PublicDemoStrapiArticleIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/admin/articles': typeof AdminArticlesRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/_dashboard': typeof DashboardRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
+  '/_public/about': typeof PublicAboutRoute
   '/api/inngest': typeof ApiInngestRoute
-  '/auth/forgot-password': typeof AuthForgotPasswordRoute
-  '/auth/login': typeof AuthLoginRoute
-  '/auth/signup': typeof AuthSignupRoute
-  '/auth/verify-otp': typeof AuthVerifyOtpRoute
-  '/demo/better-auth': typeof DemoBetterAuthRoute
-  '/demo/prisma': typeof DemoPrismaRoute
-  '/demo/strapi': typeof DemoStrapiRouteWithChildren
-  '/demo/table': typeof DemoTableRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/posts/$postId': typeof PostsPostIdRoute
-  '/admin/': typeof AdminIndexRoute
-  '/posts/': typeof PostsIndexRoute
+  '/_public/': typeof PublicIndexRoute
+  '/_dashboard/admin/articles': typeof DashboardAdminArticlesRoute
+  '/_dashboard/admin/comments': typeof DashboardAdminCommentsRoute
+  '/_dashboard/admin/payments': typeof DashboardAdminPaymentsRoute
+  '/_dashboard/admin/settings': typeof DashboardAdminSettingsRoute
+  '/_dashboard/admin/subscribers': typeof DashboardAdminSubscribersRoute
+  '/_public/auth/forgot-password': typeof PublicAuthForgotPasswordRoute
+  '/_public/auth/login': typeof PublicAuthLoginRoute
+  '/_public/auth/signup': typeof PublicAuthSignupRoute
+  '/_public/auth/verify-otp': typeof PublicAuthVerifyOtpRoute
+  '/_public/demo/better-auth': typeof PublicDemoBetterAuthRoute
+  '/_public/demo/prisma': typeof PublicDemoPrismaRoute
+  '/_public/demo/strapi': typeof PublicDemoStrapiRouteWithChildren
+  '/_public/demo/table': typeof PublicDemoTableRoute
+  '/_public/demo/tanstack-query': typeof PublicDemoTanstackQueryRoute
+  '/_public/posts/$postId': typeof PublicPostsPostIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/demo/sentry/testing': typeof DemoSentryTestingRoute
-  '/demo/strapi/$articleId': typeof DemoStrapiArticleIdRoute
+  '/_dashboard/admin/': typeof DashboardAdminIndexRoute
+  '/_public/posts/': typeof PublicPostsIndexRoute
+  '/_public/demo/form/address': typeof PublicDemoFormAddressRoute
+  '/_public/demo/form/simple': typeof PublicDemoFormSimpleRoute
+  '/_public/demo/sentry/testing': typeof PublicDemoSentryTestingRoute
+  '/_public/demo/strapi/$articleId': typeof PublicDemoStrapiArticleIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
-    | '/admin/articles'
-    | '/admin/settings'
     | '/api/inngest'
+    | '/admin/articles'
+    | '/admin/comments'
+    | '/admin/payments'
+    | '/admin/settings'
+    | '/admin/subscribers'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
@@ -234,9 +279,9 @@ export interface FileRouteTypes {
     | '/demo/table'
     | '/demo/tanstack-query'
     | '/posts/$postId'
+    | '/api/auth/$'
     | '/admin/'
     | '/posts/'
-    | '/api/auth/$'
     | '/demo/form/address'
     | '/demo/form/simple'
     | '/demo/sentry/testing'
@@ -245,9 +290,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
-    | '/admin/articles'
-    | '/admin/settings'
     | '/api/inngest'
+    | '/admin/articles'
+    | '/admin/comments'
+    | '/admin/payments'
+    | '/admin/settings'
+    | '/admin/subscribers'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
@@ -258,99 +306,80 @@ export interface FileRouteTypes {
     | '/demo/table'
     | '/demo/tanstack-query'
     | '/posts/$postId'
+    | '/api/auth/$'
     | '/admin'
     | '/posts'
-    | '/api/auth/$'
     | '/demo/form/address'
     | '/demo/form/simple'
     | '/demo/sentry/testing'
     | '/demo/strapi/$articleId'
   id:
     | '__root__'
-    | '/'
-    | '/about'
-    | '/admin/articles'
-    | '/admin/settings'
+    | '/_dashboard'
+    | '/_public'
+    | '/_public/about'
     | '/api/inngest'
-    | '/auth/forgot-password'
-    | '/auth/login'
-    | '/auth/signup'
-    | '/auth/verify-otp'
-    | '/demo/better-auth'
-    | '/demo/prisma'
-    | '/demo/strapi'
-    | '/demo/table'
-    | '/demo/tanstack-query'
-    | '/posts/$postId'
-    | '/admin/'
-    | '/posts/'
+    | '/_public/'
+    | '/_dashboard/admin/articles'
+    | '/_dashboard/admin/comments'
+    | '/_dashboard/admin/payments'
+    | '/_dashboard/admin/settings'
+    | '/_dashboard/admin/subscribers'
+    | '/_public/auth/forgot-password'
+    | '/_public/auth/login'
+    | '/_public/auth/signup'
+    | '/_public/auth/verify-otp'
+    | '/_public/demo/better-auth'
+    | '/_public/demo/prisma'
+    | '/_public/demo/strapi'
+    | '/_public/demo/table'
+    | '/_public/demo/tanstack-query'
+    | '/_public/posts/$postId'
     | '/api/auth/$'
-    | '/demo/form/address'
-    | '/demo/form/simple'
-    | '/demo/sentry/testing'
-    | '/demo/strapi/$articleId'
+    | '/_dashboard/admin/'
+    | '/_public/posts/'
+    | '/_public/demo/form/address'
+    | '/_public/demo/form/simple'
+    | '/_public/demo/sentry/testing'
+    | '/_public/demo/strapi/$articleId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  AdminArticlesRoute: typeof AdminArticlesRoute
-  AdminSettingsRoute: typeof AdminSettingsRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
   ApiInngestRoute: typeof ApiInngestRoute
-  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthSignupRoute: typeof AuthSignupRoute
-  AuthVerifyOtpRoute: typeof AuthVerifyOtpRoute
-  DemoBetterAuthRoute: typeof DemoBetterAuthRoute
-  DemoPrismaRoute: typeof DemoPrismaRoute
-  DemoStrapiRoute: typeof DemoStrapiRouteWithChildren
-  DemoTableRoute: typeof DemoTableRoute
-  DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
-  PostsPostIdRoute: typeof PostsPostIdRoute
-  AdminIndexRoute: typeof AdminIndexRoute
-  PostsIndexRoute: typeof PostsIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  DemoFormAddressRoute: typeof DemoFormAddressRoute
-  DemoFormSimpleRoute: typeof DemoFormSimpleRoute
-  DemoSentryTestingRoute: typeof DemoSentryTestingRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_dashboard': {
+      id: '/_dashboard'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public/': {
+      id: '/_public/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/about': {
-      id: '/about'
+    '/_public/about': {
+      id: '/_public/about'
       path: '/about'
       fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/': {
-      id: '/admin/'
-      path: '/admin'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/articles': {
-      id: '/admin/articles'
-      path: '/admin/articles'
-      fullPath: '/admin/articles'
-      preLoaderRoute: typeof AdminArticlesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/settings': {
-      id: '/admin/settings'
-      path: '/admin/settings'
-      fullPath: '/admin/settings'
-      preLoaderRoute: typeof AdminSettingsRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicAboutRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/api/inngest': {
       id: '/api/inngest'
@@ -359,82 +388,124 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiInngestRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/forgot-password': {
-      id: '/auth/forgot-password'
+    '/_dashboard/admin/': {
+      id: '/_dashboard/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof DashboardAdminIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/admin/articles': {
+      id: '/_dashboard/admin/articles'
+      path: '/admin/articles'
+      fullPath: '/admin/articles'
+      preLoaderRoute: typeof DashboardAdminArticlesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/admin/comments': {
+      id: '/_dashboard/admin/comments'
+      path: '/admin/comments'
+      fullPath: '/admin/comments'
+      preLoaderRoute: typeof DashboardAdminCommentsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/admin/payments': {
+      id: '/_dashboard/admin/payments'
+      path: '/admin/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof DashboardAdminPaymentsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/admin/settings': {
+      id: '/_dashboard/admin/settings'
+      path: '/admin/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof DashboardAdminSettingsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/admin/subscribers': {
+      id: '/_dashboard/admin/subscribers'
+      path: '/admin/subscribers'
+      fullPath: '/admin/subscribers'
+      preLoaderRoute: typeof DashboardAdminSubscribersRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_public/auth/forgot-password': {
+      id: '/_public/auth/forgot-password'
       path: '/auth/forgot-password'
       fullPath: '/auth/forgot-password'
-      preLoaderRoute: typeof AuthForgotPasswordRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicAuthForgotPasswordRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/auth/login': {
-      id: '/auth/login'
+    '/_public/auth/login': {
+      id: '/_public/auth/login'
       path: '/auth/login'
       fullPath: '/auth/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicAuthLoginRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/auth/signup': {
-      id: '/auth/signup'
+    '/_public/auth/signup': {
+      id: '/_public/auth/signup'
       path: '/auth/signup'
       fullPath: '/auth/signup'
-      preLoaderRoute: typeof AuthSignupRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicAuthSignupRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/auth/verify-otp': {
-      id: '/auth/verify-otp'
+    '/_public/auth/verify-otp': {
+      id: '/_public/auth/verify-otp'
       path: '/auth/verify-otp'
       fullPath: '/auth/verify-otp'
-      preLoaderRoute: typeof AuthVerifyOtpRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicAuthVerifyOtpRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/demo/better-auth': {
-      id: '/demo/better-auth'
+    '/_public/demo/better-auth': {
+      id: '/_public/demo/better-auth'
       path: '/demo/better-auth'
       fullPath: '/demo/better-auth'
-      preLoaderRoute: typeof DemoBetterAuthRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicDemoBetterAuthRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/demo/prisma': {
-      id: '/demo/prisma'
+    '/_public/demo/prisma': {
+      id: '/_public/demo/prisma'
       path: '/demo/prisma'
       fullPath: '/demo/prisma'
-      preLoaderRoute: typeof DemoPrismaRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicDemoPrismaRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/demo/strapi': {
-      id: '/demo/strapi'
+    '/_public/demo/strapi': {
+      id: '/_public/demo/strapi'
       path: '/demo/strapi'
       fullPath: '/demo/strapi'
-      preLoaderRoute: typeof DemoStrapiRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicDemoStrapiRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/demo/table': {
-      id: '/demo/table'
+    '/_public/demo/table': {
+      id: '/_public/demo/table'
       path: '/demo/table'
       fullPath: '/demo/table'
-      preLoaderRoute: typeof DemoTableRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicDemoTableRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/demo/tanstack-query': {
-      id: '/demo/tanstack-query'
+    '/_public/demo/tanstack-query': {
+      id: '/_public/demo/tanstack-query'
       path: '/demo/tanstack-query'
       fullPath: '/demo/tanstack-query'
-      preLoaderRoute: typeof DemoTanstackQueryRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicDemoTanstackQueryRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/posts/': {
-      id: '/posts/'
+    '/_public/posts/': {
+      id: '/_public/posts/'
       path: '/posts'
       fullPath: '/posts/'
-      preLoaderRoute: typeof PostsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicPostsIndexRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/posts/$postId': {
-      id: '/posts/$postId'
+    '/_public/posts/$postId': {
+      id: '/_public/posts/$postId'
       path: '/posts/$postId'
       fullPath: '/posts/$postId'
-      preLoaderRoute: typeof PostsPostIdRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicPostsPostIdRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -443,71 +514,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/form/address': {
-      id: '/demo/form/address'
+    '/_public/demo/form/address': {
+      id: '/_public/demo/form/address'
       path: '/demo/form/address'
       fullPath: '/demo/form/address'
-      preLoaderRoute: typeof DemoFormAddressRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicDemoFormAddressRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/demo/form/simple': {
-      id: '/demo/form/simple'
+    '/_public/demo/form/simple': {
+      id: '/_public/demo/form/simple'
       path: '/demo/form/simple'
       fullPath: '/demo/form/simple'
-      preLoaderRoute: typeof DemoFormSimpleRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicDemoFormSimpleRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/demo/sentry/testing': {
-      id: '/demo/sentry/testing'
+    '/_public/demo/sentry/testing': {
+      id: '/_public/demo/sentry/testing'
       path: '/demo/sentry/testing'
       fullPath: '/demo/sentry/testing'
-      preLoaderRoute: typeof DemoSentryTestingRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicDemoSentryTestingRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/demo/strapi/$articleId': {
-      id: '/demo/strapi/$articleId'
+    '/_public/demo/strapi/$articleId': {
+      id: '/_public/demo/strapi/$articleId'
       path: '/$articleId'
       fullPath: '/demo/strapi/$articleId'
-      preLoaderRoute: typeof DemoStrapiArticleIdRouteImport
-      parentRoute: typeof DemoStrapiRoute
+      preLoaderRoute: typeof PublicDemoStrapiArticleIdRouteImport
+      parentRoute: typeof PublicDemoStrapiRoute
     }
   }
 }
 
-interface DemoStrapiRouteChildren {
-  DemoStrapiArticleIdRoute: typeof DemoStrapiArticleIdRoute
+interface DashboardRouteChildren {
+  DashboardAdminArticlesRoute: typeof DashboardAdminArticlesRoute
+  DashboardAdminCommentsRoute: typeof DashboardAdminCommentsRoute
+  DashboardAdminPaymentsRoute: typeof DashboardAdminPaymentsRoute
+  DashboardAdminSettingsRoute: typeof DashboardAdminSettingsRoute
+  DashboardAdminSubscribersRoute: typeof DashboardAdminSubscribersRoute
+  DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute
 }
 
-const DemoStrapiRouteChildren: DemoStrapiRouteChildren = {
-  DemoStrapiArticleIdRoute: DemoStrapiArticleIdRoute,
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAdminArticlesRoute: DashboardAdminArticlesRoute,
+  DashboardAdminCommentsRoute: DashboardAdminCommentsRoute,
+  DashboardAdminPaymentsRoute: DashboardAdminPaymentsRoute,
+  DashboardAdminSettingsRoute: DashboardAdminSettingsRoute,
+  DashboardAdminSubscribersRoute: DashboardAdminSubscribersRoute,
+  DashboardAdminIndexRoute: DashboardAdminIndexRoute,
 }
 
-const DemoStrapiRouteWithChildren = DemoStrapiRoute._addFileChildren(
-  DemoStrapiRouteChildren,
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
 )
 
+interface PublicDemoStrapiRouteChildren {
+  PublicDemoStrapiArticleIdRoute: typeof PublicDemoStrapiArticleIdRoute
+}
+
+const PublicDemoStrapiRouteChildren: PublicDemoStrapiRouteChildren = {
+  PublicDemoStrapiArticleIdRoute: PublicDemoStrapiArticleIdRoute,
+}
+
+const PublicDemoStrapiRouteWithChildren =
+  PublicDemoStrapiRoute._addFileChildren(PublicDemoStrapiRouteChildren)
+
+interface PublicRouteChildren {
+  PublicAboutRoute: typeof PublicAboutRoute
+  PublicIndexRoute: typeof PublicIndexRoute
+  PublicAuthForgotPasswordRoute: typeof PublicAuthForgotPasswordRoute
+  PublicAuthLoginRoute: typeof PublicAuthLoginRoute
+  PublicAuthSignupRoute: typeof PublicAuthSignupRoute
+  PublicAuthVerifyOtpRoute: typeof PublicAuthVerifyOtpRoute
+  PublicDemoBetterAuthRoute: typeof PublicDemoBetterAuthRoute
+  PublicDemoPrismaRoute: typeof PublicDemoPrismaRoute
+  PublicDemoStrapiRoute: typeof PublicDemoStrapiRouteWithChildren
+  PublicDemoTableRoute: typeof PublicDemoTableRoute
+  PublicDemoTanstackQueryRoute: typeof PublicDemoTanstackQueryRoute
+  PublicPostsPostIdRoute: typeof PublicPostsPostIdRoute
+  PublicPostsIndexRoute: typeof PublicPostsIndexRoute
+  PublicDemoFormAddressRoute: typeof PublicDemoFormAddressRoute
+  PublicDemoFormSimpleRoute: typeof PublicDemoFormSimpleRoute
+  PublicDemoSentryTestingRoute: typeof PublicDemoSentryTestingRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicAboutRoute: PublicAboutRoute,
+  PublicIndexRoute: PublicIndexRoute,
+  PublicAuthForgotPasswordRoute: PublicAuthForgotPasswordRoute,
+  PublicAuthLoginRoute: PublicAuthLoginRoute,
+  PublicAuthSignupRoute: PublicAuthSignupRoute,
+  PublicAuthVerifyOtpRoute: PublicAuthVerifyOtpRoute,
+  PublicDemoBetterAuthRoute: PublicDemoBetterAuthRoute,
+  PublicDemoPrismaRoute: PublicDemoPrismaRoute,
+  PublicDemoStrapiRoute: PublicDemoStrapiRouteWithChildren,
+  PublicDemoTableRoute: PublicDemoTableRoute,
+  PublicDemoTanstackQueryRoute: PublicDemoTanstackQueryRoute,
+  PublicPostsPostIdRoute: PublicPostsPostIdRoute,
+  PublicPostsIndexRoute: PublicPostsIndexRoute,
+  PublicDemoFormAddressRoute: PublicDemoFormAddressRoute,
+  PublicDemoFormSimpleRoute: PublicDemoFormSimpleRoute,
+  PublicDemoSentryTestingRoute: PublicDemoSentryTestingRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  AdminArticlesRoute: AdminArticlesRoute,
-  AdminSettingsRoute: AdminSettingsRoute,
+  DashboardRoute: DashboardRouteWithChildren,
+  PublicRoute: PublicRouteWithChildren,
   ApiInngestRoute: ApiInngestRoute,
-  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
-  AuthLoginRoute: AuthLoginRoute,
-  AuthSignupRoute: AuthSignupRoute,
-  AuthVerifyOtpRoute: AuthVerifyOtpRoute,
-  DemoBetterAuthRoute: DemoBetterAuthRoute,
-  DemoPrismaRoute: DemoPrismaRoute,
-  DemoStrapiRoute: DemoStrapiRouteWithChildren,
-  DemoTableRoute: DemoTableRoute,
-  DemoTanstackQueryRoute: DemoTanstackQueryRoute,
-  PostsPostIdRoute: PostsPostIdRoute,
-  AdminIndexRoute: AdminIndexRoute,
-  PostsIndexRoute: PostsIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
-  DemoFormAddressRoute: DemoFormAddressRoute,
-  DemoFormSimpleRoute: DemoFormSimpleRoute,
-  DemoSentryTestingRoute: DemoSentryTestingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

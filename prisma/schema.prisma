@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -8,9 +7,185 @@ datasource db {
   provider = "postgresql"
 }
 
-// ───────────────────────────────
-// Enums
-// ───────────────────────────────
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  name          String?
+  image         String?
+  role          Role           @default(CLIENT)
+  emailVerified Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  accounts      Account[]
+  comments      Comment[]
+  likes         Like[]
+  payments      Payment[]
+  posts         Post[]
+  sessions      Session[]
+  subscriptions Subscription[]
+
+  @@map("users")
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  content     String
+  excerpt     String?
+  postImages  String[]
+  coverImage  String?
+  isPremium   Boolean    @default(false)
+  status      PostStatus @default(DRAFT)
+  authorId    String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  publishedAt DateTime?
+  comments    Comment[]
+  likes       Like[]
+  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([authorId])
+  @@index([status])
+  @@map("posts")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  authorId  String
+  postId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([authorId])
+  @@map("comments")
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([postId])
+  @@map("likes")
+}
+
+model Plan {
+  id            String         @id @default(cuid())
+  name          String
+  slug          String         @unique
+  description   String?
+  price         Int
+  currency      String         @default("XAF")
+  durationDays  Int
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  payments      Payment[]
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+model Subscription {
+  id        String             @id @default(cuid())
+  userId    String
+  planId    String
+  status    SubscriptionStatus @default(ACTIVE)
+  startDate DateTime           @default(now())
+  endDate   DateTime
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  payments  Payment[]
+  plan      Plan               @relation(fields: [planId], references: [id])
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([planId])
+  @@index([status])
+  @@map("subscriptions")
+}
+
+model Payment {
+  id             String        @id @default(cuid())
+  userId         String
+  planId         String
+  subscriptionId String?
+  amount         Int
+  currency       String        @default("XAF")
+  status         PaymentStatus @default(PENDING)
+  provider       String        @default("KPAY")
+  reference      String?       @unique
+  externalId     String        @unique
+  checkoutUrl    String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  plan           Plan          @relation(fields: [planId], references: [id])
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([planId])
+  @@index([status])
+  @@map("payments")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  issuer                String
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([issuer, accountId], map: "account_issuer_accountId_uidx")
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
 
 enum Role {
   ADMIN
@@ -33,218 +208,4 @@ enum PaymentStatus {
   SUCCEEDED
   FAILED
   REFUNDED
-}
-
-// ───────────────────────────────
-// Utilisateur
-// ───────────────────────────────
-
-model User {
-  id            String   @id @default(cuid())
-  email         String   @unique
-  name          String?
-  image         String?
-  role          Role     @default(CLIENT)
-  emailVerified Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  posts         Post[]
-  comments      Comment[]
-  likes         Like[]
-  subscriptions Subscription[]
-  payments      Payment[]
-
-  sessions Session[]
-  accounts Account[]
-
-  @@map("users")
-}
-
-// ───────────────────────────────
-// Article / Post
-// ───────────────────────────────
-
-model Post {
-  id          String     @id @default(cuid())
-  title       String
-  slug        String     @unique
-  content     String // markdown
-  excerpt     String?
-  postImages  String[]
-  coverImage  String?
-  isPremium   Boolean    @default(false) // true = réservé aux abonnés
-  status      PostStatus @default(DRAFT)
-  authorId    String
-  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  publishedAt DateTime?
-
-  comments Comment[]
-  likes    Like[]
-
-  @@index([authorId])
-  @@index([status])
-  @@map("posts")
-}
-
-// ───────────────────────────────
-// Comments
-// ───────────────────────────────
-
-model Comment {
-  id        String   @id @default(cuid())
-  content   String
-  authorId  String
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  postId    String
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([postId])
-  @@index([authorId])
-  @@map("comments")
-}
-
-// ───────────────────────────────
-// Like (a user likes an article)
-// ───────────────────────────────
-
-model Like {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  postId    String
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-
-  @@unique([userId, postId])
-  @@index([postId])
-  @@map("likes")
-}
-
-// ───────────────────────────────
-// Subscription Plan
-// ───────────────────────────────
-
-model Plan {
-  id           String   @id @default(cuid())
-  name         String
-  slug         String   @unique
-  description  String?
-  price        Int // prix en XAF (entier, pas de décimales)
-  currency     String   @default("XAF")
-  durationDays Int // durée de l'abonnement en jours (ex : 30)
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  subscriptions Subscription[]
-  payments      Payment[]
-
-  @@map("plans")
-}
-
-// ───────────────────────────────
-// User Subscription
-// ───────────────────────────────
-
-model Subscription {
-  id        String             @id @default(cuid())
-  userId    String
-  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  planId    String
-  plan      Plan               @relation(fields: [planId], references: [id], onDelete: Restrict)
-  status    SubscriptionStatus @default(ACTIVE)
-  startDate DateTime           @default(now())
-  endDate   DateTime
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
-
-  payments Payment[]
-
-  @@index([userId])
-  @@index([planId])
-  @@index([status])
-  @@map("subscriptions")
-}
-
-// ───────────────────────────────
-// Payment
-// ───────────────────────────────
-
-model Payment {
-  id             String        @id @default(cuid())
-  userId         String
-  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  planId         String
-  plan           Plan          @relation(fields: [planId], references: [id], onDelete: Restrict)
-  subscriptionId String?
-  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
-  amount         Int
-  currency       String        @default("XAF")
-  status         PaymentStatus @default(PENDING)
-  provider       String        @default("KPAY")
-  reference      String?       @unique // référence K-Pay (ex : KPAY-20260514-ABC123)
-  externalId     String        @unique // référence marchand envoyée à K-Pay (unique)
-  checkoutUrl    String? // gatewayUrl de redirection retournée par K-Pay
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-
-  @@index([userId])
-  @@index([planId])
-  @@index([status])
-  @@map("payments")
-}
-
-model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([token])
-  @@index([userId])
-  @@map("session")
-}
-
-model Account {
-  id                    String    @id
-  issuer                String
-  accountId             String
-  providerId            String
-  userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String?
-  password              String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-
-  @@unique([issuer, accountId], map: "account_issuer_accountId_uidx")
-  @@index([userId])
-  @@map("account")
-}
-
-model Verification {
-  id         String   @id
-  identifier String
-  value      String
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@index([identifier])
-  @@map("verification")
 }

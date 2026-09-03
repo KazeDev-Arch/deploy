@@ -111,3 +111,32 @@ Format par entrée : **Contexte / Décision / Alternative écartée**. Toujours 
 **Décision** : `runtimeEnv: process.env` dans `src/env.ts`. En Vite SSR, `process.env` contient toutes les vars (y compris `VITE_`), tandis que `import.meta.env` ne contient que les `VITE_`.
 
 **Alternative écartée** : créer deux instances `createEnv` séparées (une serveur, une client) — surcomplication.
+
+---
+
+## 2026-09-03 — Layouts de route : public séparé du panneau partagé
+
+**Contexte** : le `__root.tsx` rendait Header et Footer pour toutes les routes, y compris l'admin — contraire à la décision du 09-02 (admin séparée du layout public). Besoin d'une zone `/admin/*` sans chrome public, et de pages publiques inchangées.
+
+**Décision** :
+- `__root.tsx` ne rend plus que la coquille HTML (devtools, Toaster, Scripts).
+- Layout pathless `_public` (`src/routes/_public.tsx` + dossier `_public/`) : Header + Footer autour des pages publiques déplacées (`index`, `about`, `posts/`, `auth/`, `demo/`). URLs inchangées.
+- Layout pathless `_dashboard` (`src/routes/_dashboard.tsx` + dossier `_dashboard/admin/`) : panneau partagé client/admin — authentification obligatoire (`DashboardGuard`), coquille shadcn `SidebarProvider` + Navbar persistantes entre les navigations.
+- `routeTree.gen.ts` régénéré via `npm run generate-routes` (jamais à la main).
+
+**Alternative écartée** : rendre le chrome public conditionnel dans `__root` selon la route (fragile, pas idiomatique), ou un shell par page (sidebar démontée à chaque navigation).
+
+## 2026-09-03 — Panneau partagé : menus et routes pilotés par permissions
+
+**Contexte** : un seul panneau est partagé par le client (`CLIENT`) et l'admin (`ADMIN`). Certains menus/données sont réservés à l'admin ; `src/lib/permissions.ts` était amorcé mais incomplet.
+
+**Décision** :
+- **Permissions** : `src/lib/permissions.ts` complété — énoncé étendu (`article`, `user`, `comment`, `subscription`, `payment`, `settings`), rôles better-auth `adminRole`/`clientRole` (via `createAccessControl`, pour l'enforcement serveur futur) + helper **pur** `canAccess(role, resource, action)` utilisable client et serveur.
+- **Menu unique** dans `components/admin/admin-sidebar.tsx` : chaque entrée porte une permission optionnelle (`{ resource, action }`), filtrée par rôle au rendu. Client : « Tableau de bord » uniquement ; Admin : + Articles, Commentaires, Abonnés, Paiements, Réglages.
+- **Routes protégées par rôle** : `DashboardGuard` (auth, dans le layout `_dashboard`) et `RequireRole` (par page, ex. `ADMIN`) — pas seulement masquage du menu.
+- **Profil en bas de sidebar** (Avatar + DropdownMenu : badge rôle, voir le site, déconnexion) et **Navbar** avec `SidebarTrigger` + cloche de notifications (placeholder).
+- Le dashboard d'accueil affiche des données différentes selon le rôle (stats site pour ADMIN, état d'abonnement pour CLIENT) — valeurs d'exemple en attendant les loaders Prisma.
+- Composants conservés dans `components/admin/` (décision 09-02), mais `AdminLayout` est désormais la coquille du panneau partagé, pas d'un « back-office admin » exclusif.
+- Sessions typées avec le champ `role` : plugin client `inferAdditionalFields<typeof auth>()` dans `src/lib/auth-client.ts`.
+
+**Alternative écartée** : garder l'ancien template (navbar + sidebar maison) et l'ancien `AdminProtection` sans contrôle de rôle (un `CLIENT` aurait pu ouvrir `/admin/articles`), ou dupliquer la logique de permission dans chaque composant.

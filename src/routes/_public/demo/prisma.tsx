@@ -20,7 +20,7 @@ const createTodo = createServerFn({
     })
   })
 
-export const Route = createFileRoute('/demo/prisma')({
+export const Route = createFileRoute('/_public/demo/prisma')({
   component: DemoPrisma,
   loader: async () => await getTodos(),
 })

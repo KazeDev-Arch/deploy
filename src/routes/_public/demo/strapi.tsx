@@ -19,7 +19,7 @@ const searchSchema = z.object({
   page: z.number().default(1),
 })
 
-export const Route = createFileRoute('/demo/strapi')({
+export const Route = createFileRoute('/_public/demo/strapi')({
   component: RouteComponent,
   validateSearch: searchSchema,
   loaderDeps: ({ search }) => ({ search }),

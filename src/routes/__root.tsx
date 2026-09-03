@@ -6,8 +6,6 @@ import {
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { Toaster } from 'sonner'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
@@ -50,9 +48,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="font-sans antialiased wrap-anywhere selection:bg-foreground/15">
-        <Header />
+        {/* Header/Footer sont rendus par les layouts de route (`_public`, `_dashboard`) */}
         {children}
-        <Footer />
         <Toaster richColors position="top-center" />
         <TanStackDevtools
           config={{

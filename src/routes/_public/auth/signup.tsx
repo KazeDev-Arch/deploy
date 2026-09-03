@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Lock, Mail } from 'lucide-react'
+import { Lock, Mail, User } from 'lucide-react'
 
 import {
   AuthDivider,
@@ -11,42 +11,56 @@ import {
 import { GoogleButton } from '#/components/auth/google-button.tsx'
 import { Button } from '#/components/ui/button.tsx'
 import {
-  useLoginMutation,
+  useSignupMutation,
   useGoogleSignInMutation,
 } from '#/hooks/auth.hooks.ts'
 
-export const Route = createFileRoute('/auth/login')({ component: Login })
+export const Route = createFileRoute('/_public/auth/signup')({
+  component: Signup,
+})
 
-function Login() {
+function Signup() {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const loginMutation = useLoginMutation()
+  const signupMutation = useSignupMutation()
   const googleMutation = useGoogleSignInMutation()
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    loginMutation.mutate({ email, password })
+    signupMutation.mutate({ data: { name, email, password } })
   }
 
   return (
     <AuthShell
-      title="Se connecter"
-      description="Bon retour parmi nous. Renseignez vos identifiants."
+      title="Créer un compte"
+      description="Rejoignez Deploy et accédez à tous les articles."
       footer={
         <p className="text-sm text-muted-foreground">
-          Pas encore de compte ?{' '}
+          Déjà un compte ?{' '}
           <Link
-            to="/auth/signup"
+            to="/auth/login"
             className="font-semibold text-foreground underline-offset-4 hover:underline"
           >
-            Créer un compte
+            Se connecter
           </Link>
         </p>
       }
     >
       <AuthFieldGroup>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <AuthField
+            id="name"
+            label="Nom"
+            type="text"
+            placeholder="Votre nom"
+            autoComplete="name"
+            required
+            icon={User}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <AuthField
             id="email"
             label="Email"
@@ -63,26 +77,18 @@ function Login() {
             label="Mot de passe"
             type="password"
             placeholder="••••••••"
-            autoComplete="current-password"
+            autoComplete="new-password"
             required
             icon={Lock}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            labelAction={
-              <Link
-                to="/auth/forgot-password"
-                className="text-xs font-medium text-muted-foreground underline-offset-4 transition hover:text-foreground hover:underline"
-              >
-                Mot de passe oublié ?
-              </Link>
-            }
           />
           <Button
             type="submit"
             className="w-full"
-            disabled={loginMutation.isPending}
+            disabled={signupMutation.isPending}
           >
-            {loginMutation.isPending ? 'Connexion…' : 'Se connecter'}
+            {signupMutation.isPending ? 'Création…' : 'Créer un compte'}
           </Button>
         </form>
 

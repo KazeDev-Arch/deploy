@@ -9,7 +9,7 @@ import {
 } from '#/components/auth/auth-shell.tsx'
 import { Button } from '#/components/ui/button.tsx'
 
-export const Route = createFileRoute('/auth/forgot-password')({
+export const Route = createFileRoute('/_public/auth/forgot-password')({
   component: ForgotPassword,
 })
 
