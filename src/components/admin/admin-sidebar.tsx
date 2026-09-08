@@ -1,90 +1,289 @@
-import { Button } from '#/components/ui/button'
-import { cn } from '#/lib/utils'
-import { Link, useLocation } from '@tanstack/react-router'
-import { X } from 'lucide-react'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
+import {
+  ChevronsUpDown,
+  CreditCard,
+  Globe,
+  LayoutDashboard,
+  LogOut,
+  MessageSquare,
+  Newspaper,
+  Settings,
+  Users,
+} from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
+import { toast } from 'sonner'
 
-export const ADMIN_MENU_ITEMS = [
+import { Avatar, AvatarFallback, AvatarImage } from '#/components/ui/avatar'
+import { Badge } from '#/components/ui/badge'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '#/components/ui/dropdown-menu'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+} from '#/components/ui/sidebar'
+import { authClient } from '#/lib/auth-client'
+import { canAccess, DEFAULT_ROLE } from '#/lib/permissions'
+import type { Action, AppRole, Resource } from '#/lib/permissions'
+
+interface Permission {
+  resource: Resource
+  action: Action
+}
+
+interface DashboardMenuItem {
+  title: string
+  href: string
+  icon: LucideIcon
+  /** Requise pour voir l'entrée. Absente = visible pour tout rôle connecté. */
+  permission?: Permission
+}
+
+interface DashboardMenuGroup {
+  label?: string
+  items: DashboardMenuItem[]
+}
+
+/**
+ * Menu unique du panneau partagé client/admin. Les entrées sensibles
+ * déclarent la permission qui les contrôle ; le filtrage se fait avec
+ * `canAccess` (voir `#/lib/permissions`).
+ */
+const DASHBOARD_MENU: DashboardMenuGroup[] = [
   {
-    label: 'Dashboard',
-    href: '/admin',
+    items: [
+      { title: 'Tableau de bord', href: '/admin', icon: LayoutDashboard },
+    ],
   },
   {
-    label: 'Articles',
-    href: '/admin/articles',
-  },
-  {
-    label: 'Paramètres',
-    href: '/admin/settings',
+    label: 'Administration',
+    items: [
+      {
+        title: 'Articles',
+        href: '/admin/articles',
+        icon: Newspaper,
+        permission: { resource: 'article', action: 'read' },
+      },
+      {
+        title: 'Commentaires',
+        href: '/admin/comments',
+        icon: MessageSquare,
+        permission: { resource: 'comment', action: 'read' },
+      },
+      {
+        title: 'Abonnés',
+        href: '/admin/subscribers',
+        icon: Users,
+        permission: { resource: 'user', action: 'read' },
+      },
+      {
+        title: 'Paiements',
+        href: '/admin/payments',
+        icon: CreditCard,
+        permission: { resource: 'payment', action: 'read' },
+      },
+      {
+        title: 'Réglages',
+        href: '/admin/settings',
+        icon: Settings,
+        permission: { resource: 'settings', action: 'read' },
+      },
+    ],
   },
 ]
 
-interface AdminSidebarProps {
-  open?: boolean
-  onClose?: () => void
+function getMenuForRole(
+  role: AppRole | null | undefined,
+): DashboardMenuGroup[] {
+  return DASHBOARD_MENU.map((group) => ({
+    label: group.label,
+    items: group.items.filter((item) => {
+      if (!item.permission) return true
+      return canAccess(role, item.permission.resource, item.permission.action)
+    }),
+  })).filter((group) => group.items.length > 0)
 }
 
-export function AdminSidebar({ open = true, onClose }: AdminSidebarProps) {
-  const location = useLocation()
-  const isActive = (href: string) => location.pathname === href
+function getInitials(
+  name: string | null | undefined,
+  email: string | null | undefined,
+) {
+  if (name) {
+    return name
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase())
+      .join('')
+  }
+  return email?.[0]?.toUpperCase() ?? '?'
+}
 
+const ROLE_LABELS: Record<AppRole, string> = {
+  ADMIN: 'Administrateur',
+  CLIENT: 'Lecteur',
+}
+
+function DashboardBrand() {
   return (
-    <>
-      {/* Mobile overlay */}
-      {open && (
-        <div
-          className="fixed inset-0 z-30 bg-black/50 md:hidden"
-          onClick={onClose}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside
-        className={cn(
-          'fixed left-0 top-14 z-40 h-[calc(100vh-3.5rem)] w-64 border-r border-border bg-background transition-transform duration-200 md:relative md:top-0 md:h-screen md:translate-x-0',
-          open ? 'translate-x-0' : '-translate-x-full'
-        )}
-      >
-        <div className="flex flex-col gap-4 p-4 h-full">
-          {/* Close button (mobile only) */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="md:hidden self-end"
-            onClick={onClose}
-            data-icon="inline-end"
-          >
-            <X className="size-4" />
-          </Button>
-
-          {/* Navigation */}
-          <nav className="flex flex-col gap-1">
-            {ADMIN_MENU_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                onClick={onClose}
-                className={cn(
-                  'px-3 py-2 text-sm rounded-md transition-colors',
-                  isActive(item.href)
-                    ? 'bg-primary text-primary-foreground font-medium'
-                    : 'hover:bg-muted text-foreground'
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Spacer */}
-          <div className="flex-1" />
-
-          {/* Footer section (optional) */}
-          <div className="border-t border-border pt-4 text-xs text-muted-foreground">
-            <p>Deploy v1.0</p>
-          </div>
-        </div>
-      </aside>
-    </>
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton size="lg" asChild>
+          <Link to="/admin" aria-label="Deploy — Tableau de bord">
+            <div className="grid size-8 shrink-0 place-items-center rounded-md bg-foreground text-background">
+              <span className="size-2 rounded-[2px] bg-background" />
+            </div>
+            <div className="grid flex-1 text-left leading-tight">
+              <span className="truncate font-semibold">Deploy</span>
+              <span className="truncate text-xs text-sidebar-foreground/60">
+                Espace membres
+              </span>
+            </div>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
   )
 }
 
+export function AdminSidebar() {
+  const { data: session } = authClient.useSession()
+  const location = useLocation()
+  const role = (session?.user.role ?? DEFAULT_ROLE) as AppRole
+  const groups = getMenuForRole(role)
+
+  const isActive = (href: string) =>
+    location.pathname === href ||
+    (href !== '/admin' && location.pathname.startsWith(`${href}/`))
+
+  return (
+    <Sidebar collapsible="icon">
+      <SidebarHeader>
+        <DashboardBrand />
+      </SidebarHeader>
+
+      <SidebarContent>
+        {groups.map((group, index) => (
+          <SidebarGroup key={group.label ?? `group-${index}`}>
+            {group.label && (
+              <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+            )}
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {group.items.map((item) => (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive(item.href)}
+                      tooltip={item.title}
+                    >
+                      <Link to={item.href}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+
+      <SidebarFooter>
+        <AdminUserMenu />
+      </SidebarFooter>
+
+      <SidebarRail />
+    </Sidebar>
+  )
+}
+
+function AdminUserMenu() {
+  const navigate = useNavigate()
+  const { data: session } = authClient.useSession()
+  const user = session?.user
+  const role = (user?.role ?? DEFAULT_ROLE) as AppRole
+
+  const handleSignOut = async () => {
+    await authClient.signOut()
+    toast.success('Déconnexion réussie.')
+    void navigate({ to: '/auth/login' })
+  }
+
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
+              <Avatar className="size-8 rounded-lg">
+                {user?.image ? <AvatarImage src={user.image} alt="" /> : null}
+                <AvatarFallback className="rounded-lg">
+                  {getInitials(user?.name, user?.email)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-medium">
+                  {user?.name ?? 'Utilisateur'}
+                </span>
+                <span className="truncate text-xs text-sidebar-foreground/60">
+                  {user?.email ?? ''}
+                </span>
+              </div>
+              <ChevronsUpDown />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent
+            side="top"
+            align="start"
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+          >
+            <DropdownMenuLabel className="flex items-center justify-between gap-2 p-2">
+              <span className="text-xs text-muted-foreground">Mon compte</span>
+              <Badge
+                variant="secondary"
+                className="text-[10px] uppercase tracking-wide"
+              >
+                {ROLE_LABELS[role]}
+              </Badge>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem asChild>
+                <Link to="/">
+                  <Globe />
+                  Voir le site
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem variant="destructive" onSelect={handleSignOut}>
+              <LogOut />
+              Se déconnecter
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  )
+}

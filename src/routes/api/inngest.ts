@@ -2,11 +2,13 @@ import { serve } from 'inngest/edge'
 import { inngest } from '#/inngest/client.ts'
 import { createFileRoute } from '@tanstack/react-router'
 import { helloWorld } from '#/inngest/functions.ts'
+import { sendOtpEmail } from '#/inngest/functions/otp-email.ts'
 
 const handler = serve({
   client: inngest,
   functions: [
-    helloWorld
+    helloWorld,
+    sendOtpEmail,
   ],
 })
 

@@ -39,3 +39,7 @@ Règle : **aucune couleur codée en dur** (`bg-blue-500`, `text-emerald-600`, `#
 ## Nettoyage en cours
 
 Le thème actuel de `src/styles.css` contient encore des couleurs custom « sea/teal » (`--sea-ink`, `--lagoon`, `--palm`, `--sand`...) et des classes décoratives (`.island-shell`, `.feature-card`, `.nav-link`, `.island-kicker`, etc.) héritées d'un template. Pour passer au noir & blanc pur : supprimer ces tokens/classes et ramener les composants à la seule palette sémantique shadcn. Voir `08-decisions-log.md`.
+
+## Qualité UX des features (skill `ui-ux-pro-max`)
+
+Ce fichier **définit** le design system et reste la seule source de vérité (tokens, typo, principes). Pour la **qualité visuelle et UX des features** (structure, patterns, accessibilité, responsive, review avant livraison), utiliser le skill `.agents/skills/ui-ux-pro-max/` — **déjà adapté au projet** (section « Adaptation projet » de son `SKILL.md`) : il s'appuie sur ce design system, il ne le redéfinit pas (aucune palette, police ou thème alternatif). En cas de conflit, ce fichier et les règles shadcn (`.agents/skills/shadcn/rules/`) priment.

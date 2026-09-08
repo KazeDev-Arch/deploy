@@ -10,13 +10,14 @@
 4. Si tu es bloqué, qu'un build/test échoue deux fois de suite ou que tu as dérivé du plan, utilise `recover`.
 5. Quand une décision durable est prise (convention, choix d'architecture, correction de ma part), utilise `remember`.
 6. Au début d'une session longue, utilise `imprint` pour te resynchroniser et valider ta compréhension avec moi.
+7. Pour toute feature avec un rendu visuel, applique le workflow UI/UX du skill `ui-ux-pro-max` (contextualiser → patterns UX → implémenter → UX review).
 
 ## Quel fichier de contexte pour quelle tâche
 
 | Tâche | Fichiers à lire |
 |---|---|
 | Nouvelle route / écran / fonctionnalité | `01-product-requirements`, `02-design-system`, `03-architecture`, `05-coding-conventions` |
-| Question UI / couleurs / typo / composants | `02-design-system` + `.agents/skills/shadcn/` |
+| Question UI / couleurs / typo / composants | `02-design-system` + `.agents/skills/shadcn/` + `.agents/skills/ui-ux-pro-max/` |
 | Où ranger un fichier, nommage, patterns | `03-architecture`, `05-coding-conventions` |
 | Intégration backend / server functions / DB | `04-tech-stack`, `06-api-contracts` |
 | Ton, copywriting, décisions UX | `07-personas-et-principes` |
@@ -41,6 +42,17 @@ Les règles d'utilisation des composants shadcn vivent dans `.agents/skills/` :
 - `.agents/skills/migrate-radix-to-base/` — migration radix → base (utile seulement si on change de primitive).
 
 À lire **avant** toute tâche d'interface, et à respecter strictement (ex. `FieldGroup`/`Field` pour les formulaires, `data-icon` pour les icônes, `gap-*` plutôt que `space-y-*`, `size-*`, `cn()` pour les classes conditionnelles). Vérifier avec `npx shadcn@latest info` les composants réellement installés avant d'en importer un.
+
+## Compétences (skills) UI/UX — ui-ux-pro-max
+
+`.agents/skills/ui-ux-pro-max/` — intelligence design/UX (guidelines UX, anti-patterns, checklist de livraison). **Il est déjà adapté au projet** — lire sa section « Adaptation projet » dans le `SKILL.md` — et s'applique à **chaque feature avec une surface visuelle** (workflow « Workflow feature (Deploy) » du SKILL.md) :
+
+1. **Contextualiser** : design system (`02-design-system.md`), conventions (`05-coding-conventions.md`), composants réellement installés (`npx shadcn@latest info`, `src/components/ui/`).
+2. **Rechercher les patterns UX** : `python ".agents/skills/ui-ux-pro-max/scripts/search.py" "<query>" --domain ux`, puis `--stack shadcn` pour l'implémentation (chemin repo, pas `${CLAUDE_PLUGIN_ROOT}`).
+3. **Traduire en primitives shadcn** : recommandations mappées sur les tokens sémantiques et les composants existants — **le design system ne se redéfinit jamais** (pas de palette, police ou thème alternatif ; Manrope et le monochrome sont fixés).
+4. **Implémenter** avec les règles shadcn, puis **UX review** avant livraison : priorités du skill (accessibilité, feedback, responsive, formulaires, navigation) + checklist `references/pro-rules.md`.
+
+Anti-hallucination : ancrer chaque choix visuel dans une règle du design system, une recherche du skill ou le code existant ; ne jamais inventer un composant ni proposer une nouvelle police/palette/lib d'icônes. En cas de conflit : design system et règles shadcn priment.
 
 ## Stack & conventions TanStack (résumé)
 

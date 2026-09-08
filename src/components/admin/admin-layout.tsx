@@ -1,40 +1,29 @@
-import type { ReactNode} from 'react';
-import { useState } from 'react'
+import type { ReactNode } from 'react'
+
+import { SidebarInset, SidebarProvider } from '#/components/ui/sidebar'
+
 import { AdminNavbar } from './admin-navbar'
 import { AdminSidebar } from './admin-sidebar'
 
 interface AdminLayoutProps {
   children: ReactNode
-  title?: string
 }
 
-export function AdminLayout({ children, title }: AdminLayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-
+/**
+ * Coquille du panneau partagé (client & admin) : Sidebar shadcn à gauche,
+ * Navbar + contenu dans le `SidebarInset`. Composée par le layout de route
+ * `_dashboard` pour rester montée entre les navigations.
+ */
+export function AdminLayout({ children }: AdminLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Navbar */}
-      <AdminNavbar
-        title={title}
-        onMenuClick={() => setSidebarOpen(true)}
-      />
-
-      {/* Main content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <AdminSidebar
-          open={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-        />
-
-        {/* Content */}
-        <main className="flex-1 overflow-auto bg-background">
-          <div className="container mx-auto py-8 px-4 max-w-7xl">
-            {children}
-          </div>
+    <SidebarProvider>
+      <AdminSidebar />
+      <SidebarInset>
+        <AdminNavbar />
+        <main className="flex flex-1 flex-col gap-6 p-4 md:p-6">
+          {children}
         </main>
-      </div>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
-

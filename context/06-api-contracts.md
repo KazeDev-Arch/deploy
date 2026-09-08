@@ -4,7 +4,7 @@ Squelette vivant : documenter ici chaque contrat (server function, endpoint REST
 
 ## Server functions (API interne)
 
-Les server functions sont exportées depuis `src/data/loaders/` (regroupées dans `index.ts` sous `strapiApi`).
+Les server functions (toutes les « actions » / requêtes serveur, lecture et écriture) sont exportées depuis **`src/mutations/`**.
 
 > ⚠️ Les functions « Articles (Strapi) » ci-dessous sont **legacy** : la source de vérité des articles est Prisma `Post` (voir `08-decisions-log.md`). Elles seront remplacées par des server functions lisant le modèle `Post`.
 
