@@ -13,6 +13,16 @@ Les server functions (toutes les « actions » / requêtes serveur, lecture et �
 - `getArticleByIdData(documentId)` — `GET` — `TStrapiResponseSingle<TArticle>` (populate `cover, author, category, blocks.file, blocks.files`).
 - `getArticleBySlugData(slug)` — `GET` — `TStrapiResponseCollection<TArticle>`.
 
+### Posts (Prisma — panneau admin)
+
+- `listPosts()` — `GET` — retourne tous les posts (avec auteur), triés par `updatedAt desc`. Réservé `authorize('article', 'read')`.
+- `getPost(id)` — `GET` — retourne un post par id, ou lève « Article introuvable ». Réservé `authorize('article', 'read')`.
+- `createPost(input)` — `POST` — Input : `{ title, content, excerpt?, coverImage?, postImages: string[], isPremium, status }` (schéma `#/schemas/post`). Le **slug est généré côté serveur** (titre slugifié + suffixe d'unicité) — il n'est ni saisi ni envoyé par le client. `publishedAt` est posé si `status = PUBLISHED`. Réservé `authorize('article', 'create')`.
+- `updatePost(input)` — `POST` — Input : idem `createPost` + `id`. Le **slug n'est jamais modifié** (stabilité des URLs partagées). Réservé `authorize('article', 'update')`.
+- `deletePost(id)` — `POST` — supprime le post. Réservé `authorize('article', 'delete')`.
+
+Lié à : modèle Prisma `Post`, exigences « Écriture » de `01-product-requirements.md`.
+
 ## Strapi (REST, headless CMS)
 
 - Base : `VITE_STRAPI_URL` (défaut `http://localhost:1337`), chemin `/api`.

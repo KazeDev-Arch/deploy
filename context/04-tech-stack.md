@@ -25,7 +25,8 @@
 - **Tailwind CSS v4** (`@tailwindcss/vite` + `@tailwindcss/typography` + `tw-animate-css`).
 - **shadcn/ui** (base `radix`, style `new-york`, `baseColor` zinc) : `class-variance-authority`, `clsx`, `tailwind-merge`, `radix-ui`, `lucide-react`.
 - **sonner** (notifications toast, utilisé pour les retours success/error).
-- **react-markdown** + **remark-gfm** (rendu Markdown des articles).
+- **react-markdown** + **remark-gfm** (rendu Markdown).
+- **react-quill-new** (Quill 2, fork compatible React 19) — éditeur riche des articles ; HTML stocké dans `Post.content` (voir `08-decisions-log.md`).
 
 ## Validation & types
 - **Zod 4** (validation des inputs de server functions, schémas).

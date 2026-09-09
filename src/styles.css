@@ -281,6 +281,153 @@ a {
   }
 }
 
+/* ─── Quill (éditeur d'article) ─────────────────────────────── */
+
+/* Le bundle Snow de react-quill-new importe ses propres couleurs ; on
+   réhabilite les tokens du design system, sans valeur codée en dur. */
+.post-editor .ql-toolbar,
+.post-editor .ql-container {
+  border-color: var(--border);
+  font-family: inherit;
+}
+
+.post-editor .ql-toolbar {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: var(--muted);
+}
+
+.post-editor .ql-container {
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  min-height: 24rem;
+  background: var(--background);
+}
+
+.post-editor .ql-editor {
+  min-height: 23.5rem;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--foreground);
+}
+
+.post-editor .ql-editor.ql-blank::before {
+  color: var(--muted-foreground);
+  font-style: normal;
+}
+
+.post-editor .ql-snow .ql-stroke {
+  stroke: var(--muted-foreground);
+}
+
+.post-editor .ql-snow .ql-fill {
+  fill: var(--muted-foreground);
+}
+
+.post-editor .ql-snow .ql-picker {
+  color: var(--muted-foreground);
+}
+
+.post-editor .ql-snow .ql-picker-options {
+  background: var(--popover);
+  border-color: var(--border);
+  color: var(--popover-foreground);
+}
+
+.post-editor .ql-snow .ql-picker-item:hover {
+  color: var(--foreground);
+}
+
+.post-editor .ql-snow .ql-picker-label:hover,
+.post-editor .ql-snow .ql-picker-label.ql-active {
+  color: var(--foreground);
+}
+
+.post-editor .ql-snow .ql-active .ql-stroke,
+.post-editor .ql-snow .ql-picker-label.ql-active .ql-stroke,
+.post-editor .ql-snow .ql-button:hover .ql-stroke {
+  stroke: var(--foreground);
+}
+
+.post-editor .ql-snow .ql-active .ql-fill,
+.post-editor .ql-snow .ql-button:hover .ql-fill {
+  fill: var(--foreground);
+}
+
+.post-editor .ql-snow .ql-picker-label.ql-active,
+.post-editor .ql-snow .ql-button.ql-active {
+  color: var(--foreground);
+}
+
+.post-editor button.ql-active,
+.post-editor .ql-toolbar button:hover {
+  color: var(--foreground);
+}
+
+.post-editor .ql-snow .ql-editor a,
+.post-editor .ql-editor a {
+  color: var(--foreground);
+  text-decoration: underline;
+}
+
+.post-editor .ql-snow .ql-tooltip {
+  background: var(--popover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--popover-foreground);
+  box-shadow: 0 4px 14px color-mix(in oklab, var(--foreground) 12%, transparent);
+}
+
+.post-editor .ql-snow .ql-tooltip input[type='text'] {
+  color: var(--popover-foreground);
+  border-color: var(--border);
+}
+
+.post-editor .ql-snow .ql-tooltip a.ql-action,
+.post-editor .ql-snow .ql-tooltip a.ql-remove {
+  color: var(--foreground);
+}
+
+.post-editor img {
+  border-radius: var(--radius-md);
+}
+
+/* En lecture publique, mêmes habillages appliqués aux contenus Quill. */
+.quill-content {
+  color: var(--foreground);
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+
+.quill-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  margin-block: 1.5rem;
+}
+
+.quill-content a {
+  text-decoration: underline;
+}
+
+.quill-content blockquote {
+  border-left: 2px solid var(--foreground);
+  padding-left: 1rem;
+  font-style: italic;
+  color: var(--muted-foreground);
+}
+
+.quill-content pre {
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.quill-content pre.ql-syntax {
+  background: var(--muted);
+  color: var(--foreground);
+}
+
 .dark {
   --sidebar: oklch(0.141 0.005 285.823);
   --sidebar-foreground: oklch(0.985 0 0);

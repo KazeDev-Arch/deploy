@@ -18,36 +18,12 @@ Ces conventions sont déduites du code existant et des docs TanStack Start. Si l
 - **kebab-case** pour les fichiers de composants et utilitaires (`article-card.tsx`, `markdown-content.tsx`, `auth-shell.tsx`).
 - **Routes** (convention TanStack Router) : `index.tsx`, `about.tsx`, `$postId.tsx` (param dynamique), `$.tsx` (wildcard), dossiers pour les segments (`api/auth/$`).
 
-## Skills TanStack (référence officielle du projet)
-
-Les bonnes pratiques TanStack vivent dans **`.agents/skills/tanstack/`** — `SKILL.md` (point d'entrée) + `references/` (11 fiches spécialisées). **À consulter avant toute tâche touchant Query, Router, Form, Start (server functions, middleware, SSR) ou Table**, et à respecter : en cas de conflit, la référence TanStack fait foi sur ce fichier.
-
-| Sujet | Référence |
-|---|---|
-| Query keys / factories | `references/query-keys.md` |
-| staleTime, gcTime, invalidation, placeholder/initial data | `references/query-caching.md` |
-| Mutations, updates optimistes | `references/query-mutations.md` |
-| Prefetching, queries parallèles, infinite queries, cancellation | `references/query-fetch-patterns.md` |
-| SSR dehydrate/hydrate, offline networkMode | `references/query-ssr-offline.md` |
-| Query error boundaries, select / performance | `references/query-errors-performance.md` |
-| Enregistrement du router, typage `from`, routes virtuelles | `references/router-type-and-org.md` |
-| Route loaders, ensureQueryData, chargement parallèle | `references/router-data-loading.md` |
-| Search params, Link/navigate, route masks, preload | `references/router-search-nav.md` |
-| Lazy routes, not-found, route context, auth beforeLoad | `references/router-split-errors-context.md` |
-| TanStack Form : hooks, validateurs Zod, champs | `references/form.md` |
-
-Règles transverses du `SKILL.md` (tripwires) :
-- **Query** : clés-tableaux incluant toutes les dépendances ; mutations réconciliées via les clés canoniques (update depuis la réponse serveur ou invalidation) ; tout cache write optimiste doit avoir un rollback ; jamais de valeur non sérialisable dans une clé.
-- **Router** : enregistrer le type du router ; valider les search params avec `.catch()` (defaults) ; `ensureQueryData` dans les loaders quand Query est couplé ; `throw redirect(...)` et non `return`.
-- **Form** : `defaultValues` complets pour l'inférence ; Zod au niveau form/champ ; debounce des validateurs async ; `role="alert"` sur les erreurs de champ ; `preventDefault` au submit.
-
-En complément, le fichier `AGENTS.md` (racine) embarque le catalogue **TanStack Intent** : une commande `npx @tanstack/intent@latest load <id>` à lancer avant d'éditer, pour charger la doc officielle du domaine concerné (devtools, table, router-core, start-core, table-core, etc.). À utiliser quand la tâche sort du périmètre des références ci-dessus.
-
 ## Routing (TanStack Router)
 
-- Fichiers de route dans `src/routes/`. Chaque route exporte `Route` via `createFileRoute('<path>')({ ... })`. **Détails et patterns : `.agents/skills/tanstack/references/router-type-and-org.md`, `router-data-loading.md`, `router-search-nav.md`, `router-split-errors-context.md`.**
+- Fichiers de route dans `src/routes/`. Chaque route exporte `Route` via `createFileRoute('<path>')({ ... })`.
 - `__root.tsx` = route racine (coquille HTML). `routeTree.gen.ts` est généré — **ne jamais l'éditer** ; régénérer avec `npm run generate-routes`.
 - Param dynamique : `$postId.tsx` → `createFileRoute('/posts/$postId')`.
+- **Route « index » d'un segment avec sous-routes** : utiliser la notation plate `articles.index.tsx` (jamais `articles.tsx` à côté d'un dossier `articles/`) : un fichier `articles.tsx` devient le **layout parent** des routes du dossier et, sans `<Outlet />`, avale les pages enfants (elles ne s'affichent jamais). Exemple type : liste `admin/articles.index.tsx` + `admin/articles/new.tsx` + `admin/articles/$postId.tsx`.
 - Le path passé à `createFileRoute` est géré automatiquement ; ne pas le modifier à la main quand on renomme/déplace un fichier.
 
 ## Données : loaders vs server functions
@@ -74,7 +50,7 @@ export const createComment = createServerFn({ method: 'POST' })
   })
 ```
 
-- Côté composant, ne jamais appeler une server function brute : passer par un hook. **Détails : `.agents/skills/tanstack/references/query-mutations.md` et `query-keys.md`.**
+- Côté composant, ne jamais appeler une server function brute : passer par un hook.
 - **Pattern action → hook → composant** : server function dans `mutations/` (logique métier) → hook dédié dans `hooks/` (gestion de l'UI : `useServerFn` + `useQuery`/`useMutation` + toast + navigation + invalidation) → composant (purement présentation).
 - **Convention d'appel** : une server function s'appelle avec l'enveloppe `{ data: <input> }` (ex. `mutation.mutate({ data: values })`), **pas** l'input directement — c'est la signature du fetcher retourné par `useServerFn`. En `onSuccess`, l'input se lit dans `variables.data`.
 
@@ -103,7 +79,7 @@ src/schemas/users.ts               → schémas Zod partagés (client-safe)
 - `data/loaders/` : **legacy** (Strapi) — ne plus y ajouter de server function ; migrer vers `mutations/`.
 - Ne jamais faire un appel DB/HTTP direct dans un composant — passer par `mutations/` ou `lib/`.
 
-## Règles shadcn (source : `.agents/skills/shadcn/rules/`)
+## Conventions shadcn
 
 À respecter pour toute UI. Les incontournables :
 - **Tokens sémantiques** : `bg-primary`, `text-muted-foreground` — jamais de couleurs brutes.
@@ -115,17 +91,8 @@ src/schemas/users.ts               → schémas Zod partagés (client-safe)
 - **`Button` n'a pas `isPending`/`isLoading`** : composer `Spinner` + `data-icon` + `disabled`.
 - Base `radix` : pattern `asChild` (pas `render`).
 
-> Vérifier avec `npx shadcn@latest info` les composants réellement installés avant d'en importer un ; ajouter les manquants via `npx shadcn@latest add <composant>`.
 
-## UI/UX : skill `ui-ux-pro-max` (partie visuelle des features)
-
-**`.agents/skills/ui-ux-pro-max/`** couvre la **qualité visuelle et UX** de chaque feature : structure de page, patterns UX (119 guidelines dans `references/quick-reference.md`), anti-patterns, accessibilité, responsive, motion. **Il est déjà adapté au projet** — sa section « Adaptation projet » fait foi — et le **design system ne se redéfinit jamais** (shadcn + monochrome noir & blanc, tokens de `src/styles.css`, cf. `02-design-system.md`).
-
-- **Quand** : toute feature avec une surface visuelle (page, composant, formulaire, états loading/vide/erreur) — suivre le « Workflow feature (Deploy) » du SKILL.md : contextualiser → rechercher les patterns UX → traduire en primitives shadcn → implémenter → UX review.
-- **Script** : `python ".agents/skills/ui-ux-pro-max/scripts/search.py" "<query>" --domain ux` (chemin repo ; stack `--stack shadcn` pour l'implémentation ; **pas** de `--persist` — le design system existe déjà).
-- **UX review** : avant livraison, repasser les priorités du skill (accessibilité, feedback, responsive, formulaires, navigation) et la checklist `references/pro-rules.md` sur l'écran modifié.
-- **Anti-hallucination** : ancrer chaque décision visuelle dans une règle du design system, une recherche du skill ou le code existant ; vérifier les composants réellement installés (`npx shadcn@latest info`) ; ne jamais inventer un composant, une API, une police ou une palette.
-- **Priorité en cas de conflit** : design system (`02-design-system.md`) + règles shadcn > recommandations du skill.
+Vérifier que le composant existe avant de l'importer ; ajouter un composant absent via la CLI du projet.
 
 ## Design system
 
@@ -172,7 +139,7 @@ Toute valeur constante partagée (URLs, seuils, mappings, valeurs par défaut) �
 ## Checklist avant de livrer
 
 1. **shadcn** — pas de couleur en dur, primitives réutilisées, règles shadcn respectées.
-2. **UI/UX** — workflow `ui-ux-pro-max` appliqué (contextualisation, patterns UX) et UX review passée : accessibilité, feedback, responsive, états loading/vide/erreur, paywall explicite.
+2. **UX** — accessibilité, feedback, responsive, états loading/vide/erreur et paywall explicite vérifiés.
 3. **Typage** — `tsc --noEmit` propre sur les fichiers modifiés.
 4. **Hooks** — aucun hook conditionnel.
 5. **Data** — pas d'appel DB/HTTP direct dans un composant ; server functions validées.

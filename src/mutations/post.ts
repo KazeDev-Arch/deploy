@@ -2,7 +2,35 @@ import { createServerFn } from '@tanstack/react-start'
 
 import { prisma } from '#/db'
 import { authorize } from '#/lib/auth-guard'
+import { slugify } from '#/lib/slug'
 import { createPostSchema, updatePostSchema } from '#/schemas/post'
+
+// ───────────────────────────────
+// Helpers (slug)
+// ───────────────────────────────
+
+/**
+ * Slug unique garanti : base = titre slugifié ; en cas de collision,
+ * suffixe `-2`, `-3`, … Teste l'unicité en base (aucune limite pratique
+ * sur le nombre de tests pour des titres réalistes).
+ */
+async function generateUniqueSlug(title: string, excludeId?: string) {
+  const base = slugify(title) || 'article'
+  let candidate = base
+  let suffix = 1
+
+  // Boucle bornée par sécurité, mais une collision en série est improbable.
+  for (let i = 0; i < 100; i++) {
+    const existing = await prisma.post.findFirst({
+      where: { slug: candidate, ...(excludeId ? { id: { not: excludeId } } : {}) },
+      select: { id: true },
+    })
+    if (!existing) return candidate
+    suffix += 1
+    candidate = `${base}-${suffix}`
+  }
+  throw new Error('Impossible de générer un slug unique pour ce titre')
+}
 
 // ───────────────────────────────
 // Lecture (panneau admin — réservé via `authorize`)
@@ -38,7 +66,7 @@ export const createPost = createServerFn({ method: 'POST' })
     return prisma.post.create({
       data: {
         title: data.title,
-        slug: data.slug,
+        slug: await generateUniqueSlug(data.title),
         content: data.content,
         excerpt: data.excerpt?.trim() || null,
         coverImage: data.coverImage?.trim() || null,
@@ -64,7 +92,8 @@ export const updatePost = createServerFn({ method: 'POST' })
       where: { id },
       data: {
         title: fields.title,
-        slug: fields.slug,
+        // Le slug ne change pas lors d'une mise à jour : les URLs déjà
+        // partagées restent valides (les slugs sont stables).
         content: fields.content,
         excerpt: fields.excerpt?.trim() || null,
         coverImage: fields.coverImage?.trim() || null,

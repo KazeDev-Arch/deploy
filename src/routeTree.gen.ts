@@ -15,7 +15,6 @@ import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as PublicAboutRouteImport } from './routes/_public/about'
 import { Route as ApiInngestRouteImport } from './routes/api/inngest'
 import { Route as DashboardAdminIndexRouteImport } from './routes/_dashboard/admin/index'
-import { Route as DashboardAdminArticlesRouteImport } from './routes/_dashboard/admin/articles'
 import { Route as DashboardAdminCommentsRouteImport } from './routes/_dashboard/admin/comments'
 import { Route as DashboardAdminPaymentsRouteImport } from './routes/_dashboard/admin/payments'
 import { Route as DashboardAdminSettingsRouteImport } from './routes/_dashboard/admin/settings'
@@ -32,6 +31,9 @@ import { Route as PublicDemoTanstackQueryRouteImport } from './routes/_public/de
 import { Route as PublicPostsIndexRouteImport } from './routes/_public/posts/index'
 import { Route as PublicPostsPostIdRouteImport } from './routes/_public/posts/$postId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as DashboardAdminArticlesIndexRouteImport } from './routes/_dashboard/admin/articles.index'
+import { Route as DashboardAdminArticlesPostIdRouteImport } from './routes/_dashboard/admin/articles/$postId'
+import { Route as DashboardAdminArticlesNewRouteImport } from './routes/_dashboard/admin/articles/new'
 import { Route as PublicDemoFormAddressRouteImport } from './routes/_public/demo/form.address'
 import { Route as PublicDemoFormSimpleRouteImport } from './routes/_public/demo/form.simple'
 import { Route as PublicDemoSentryTestingRouteImport } from './routes/_public/demo/sentry.testing'
@@ -63,11 +65,6 @@ const ApiInngestRoute = ApiInngestRouteImport.update({
 const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardAdminArticlesRoute = DashboardAdminArticlesRouteImport.update({
-  id: '/admin/articles',
-  path: '/admin/articles',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardAdminCommentsRoute = DashboardAdminCommentsRouteImport.update({
@@ -152,6 +149,24 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardAdminArticlesIndexRoute =
+  DashboardAdminArticlesIndexRouteImport.update({
+    id: '/admin/articles/',
+    path: '/admin/articles/',
+    getParentRoute: () => DashboardRoute,
+  } as any)
+const DashboardAdminArticlesPostIdRoute =
+  DashboardAdminArticlesPostIdRouteImport.update({
+    id: '/admin/articles/$postId',
+    path: '/admin/articles/$postId',
+    getParentRoute: () => DashboardRoute,
+  } as any)
+const DashboardAdminArticlesNewRoute =
+  DashboardAdminArticlesNewRouteImport.update({
+    id: '/admin/articles/new',
+    path: '/admin/articles/new',
+    getParentRoute: () => DashboardRoute,
+  } as any)
 const PublicDemoFormAddressRoute = PublicDemoFormAddressRouteImport.update({
   id: '/demo/form/address',
   path: '/demo/form/address',
@@ -178,7 +193,6 @@ export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/about': typeof PublicAboutRoute
   '/api/inngest': typeof ApiInngestRoute
-  '/admin/articles': typeof DashboardAdminArticlesRoute
   '/admin/comments': typeof DashboardAdminCommentsRoute
   '/admin/payments': typeof DashboardAdminPaymentsRoute
   '/admin/settings': typeof DashboardAdminSettingsRoute
@@ -196,16 +210,18 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/admin/': typeof DashboardAdminIndexRoute
   '/posts/': typeof PublicPostsIndexRoute
+  '/admin/articles/$postId': typeof DashboardAdminArticlesPostIdRoute
+  '/admin/articles/new': typeof DashboardAdminArticlesNewRoute
   '/demo/form/address': typeof PublicDemoFormAddressRoute
   '/demo/form/simple': typeof PublicDemoFormSimpleRoute
   '/demo/sentry/testing': typeof PublicDemoSentryTestingRoute
   '/demo/strapi/$articleId': typeof PublicDemoStrapiArticleIdRoute
+  '/admin/articles/': typeof DashboardAdminArticlesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/about': typeof PublicAboutRoute
   '/api/inngest': typeof ApiInngestRoute
-  '/admin/articles': typeof DashboardAdminArticlesRoute
   '/admin/comments': typeof DashboardAdminCommentsRoute
   '/admin/payments': typeof DashboardAdminPaymentsRoute
   '/admin/settings': typeof DashboardAdminSettingsRoute
@@ -223,10 +239,13 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/admin': typeof DashboardAdminIndexRoute
   '/posts': typeof PublicPostsIndexRoute
+  '/admin/articles/$postId': typeof DashboardAdminArticlesPostIdRoute
+  '/admin/articles/new': typeof DashboardAdminArticlesNewRoute
   '/demo/form/address': typeof PublicDemoFormAddressRoute
   '/demo/form/simple': typeof PublicDemoFormSimpleRoute
   '/demo/sentry/testing': typeof PublicDemoSentryTestingRoute
   '/demo/strapi/$articleId': typeof PublicDemoStrapiArticleIdRoute
+  '/admin/articles': typeof DashboardAdminArticlesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -235,7 +254,6 @@ export interface FileRoutesById {
   '/_public/about': typeof PublicAboutRoute
   '/api/inngest': typeof ApiInngestRoute
   '/_public/': typeof PublicIndexRoute
-  '/_dashboard/admin/articles': typeof DashboardAdminArticlesRoute
   '/_dashboard/admin/comments': typeof DashboardAdminCommentsRoute
   '/_dashboard/admin/payments': typeof DashboardAdminPaymentsRoute
   '/_dashboard/admin/settings': typeof DashboardAdminSettingsRoute
@@ -253,10 +271,13 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_dashboard/admin/': typeof DashboardAdminIndexRoute
   '/_public/posts/': typeof PublicPostsIndexRoute
+  '/_dashboard/admin/articles/$postId': typeof DashboardAdminArticlesPostIdRoute
+  '/_dashboard/admin/articles/new': typeof DashboardAdminArticlesNewRoute
   '/_public/demo/form/address': typeof PublicDemoFormAddressRoute
   '/_public/demo/form/simple': typeof PublicDemoFormSimpleRoute
   '/_public/demo/sentry/testing': typeof PublicDemoSentryTestingRoute
   '/_public/demo/strapi/$articleId': typeof PublicDemoStrapiArticleIdRoute
+  '/_dashboard/admin/articles/': typeof DashboardAdminArticlesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -264,7 +285,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/api/inngest'
-    | '/admin/articles'
     | '/admin/comments'
     | '/admin/payments'
     | '/admin/settings'
@@ -282,16 +302,18 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/admin/'
     | '/posts/'
+    | '/admin/articles/$postId'
+    | '/admin/articles/new'
     | '/demo/form/address'
     | '/demo/form/simple'
     | '/demo/sentry/testing'
     | '/demo/strapi/$articleId'
+    | '/admin/articles/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/api/inngest'
-    | '/admin/articles'
     | '/admin/comments'
     | '/admin/payments'
     | '/admin/settings'
@@ -309,10 +331,13 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/admin'
     | '/posts'
+    | '/admin/articles/$postId'
+    | '/admin/articles/new'
     | '/demo/form/address'
     | '/demo/form/simple'
     | '/demo/sentry/testing'
     | '/demo/strapi/$articleId'
+    | '/admin/articles'
   id:
     | '__root__'
     | '/_dashboard'
@@ -320,7 +345,6 @@ export interface FileRouteTypes {
     | '/_public/about'
     | '/api/inngest'
     | '/_public/'
-    | '/_dashboard/admin/articles'
     | '/_dashboard/admin/comments'
     | '/_dashboard/admin/payments'
     | '/_dashboard/admin/settings'
@@ -338,10 +362,13 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/_dashboard/admin/'
     | '/_public/posts/'
+    | '/_dashboard/admin/articles/$postId'
+    | '/_dashboard/admin/articles/new'
     | '/_public/demo/form/address'
     | '/_public/demo/form/simple'
     | '/_public/demo/sentry/testing'
     | '/_public/demo/strapi/$articleId'
+    | '/_dashboard/admin/articles/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -393,13 +420,6 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin/'
       preLoaderRoute: typeof DashboardAdminIndexRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/_dashboard/admin/articles': {
-      id: '/_dashboard/admin/articles'
-      path: '/admin/articles'
-      fullPath: '/admin/articles'
-      preLoaderRoute: typeof DashboardAdminArticlesRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/_dashboard/admin/comments': {
@@ -514,6 +534,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_dashboard/admin/articles/': {
+      id: '/_dashboard/admin/articles/'
+      path: '/admin/articles'
+      fullPath: '/admin/articles/'
+      preLoaderRoute: typeof DashboardAdminArticlesIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/admin/articles/$postId': {
+      id: '/_dashboard/admin/articles/$postId'
+      path: '/admin/articles/$postId'
+      fullPath: '/admin/articles/$postId'
+      preLoaderRoute: typeof DashboardAdminArticlesPostIdRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/admin/articles/new': {
+      id: '/_dashboard/admin/articles/new'
+      path: '/admin/articles/new'
+      fullPath: '/admin/articles/new'
+      preLoaderRoute: typeof DashboardAdminArticlesNewRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/_public/demo/form/address': {
       id: '/_public/demo/form/address'
       path: '/demo/form/address'
@@ -546,21 +587,25 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashboardRouteChildren {
-  DashboardAdminArticlesRoute: typeof DashboardAdminArticlesRoute
   DashboardAdminCommentsRoute: typeof DashboardAdminCommentsRoute
   DashboardAdminPaymentsRoute: typeof DashboardAdminPaymentsRoute
   DashboardAdminSettingsRoute: typeof DashboardAdminSettingsRoute
   DashboardAdminSubscribersRoute: typeof DashboardAdminSubscribersRoute
   DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute
+  DashboardAdminArticlesPostIdRoute: typeof DashboardAdminArticlesPostIdRoute
+  DashboardAdminArticlesNewRoute: typeof DashboardAdminArticlesNewRoute
+  DashboardAdminArticlesIndexRoute: typeof DashboardAdminArticlesIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
-  DashboardAdminArticlesRoute: DashboardAdminArticlesRoute,
   DashboardAdminCommentsRoute: DashboardAdminCommentsRoute,
   DashboardAdminPaymentsRoute: DashboardAdminPaymentsRoute,
   DashboardAdminSettingsRoute: DashboardAdminSettingsRoute,
   DashboardAdminSubscribersRoute: DashboardAdminSubscribersRoute,
   DashboardAdminIndexRoute: DashboardAdminIndexRoute,
+  DashboardAdminArticlesPostIdRoute: DashboardAdminArticlesPostIdRoute,
+  DashboardAdminArticlesNewRoute: DashboardAdminArticlesNewRoute,
+  DashboardAdminArticlesIndexRoute: DashboardAdminArticlesIndexRoute,
 }
 
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(

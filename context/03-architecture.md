@@ -9,7 +9,7 @@ src/
 │   ├── _public.tsx         → layout public (Header + Footer)
 │   ├── _public/            → index, about, posts/, auth/, demo/
 │   ├── _dashboard.tsx      → layout panneau partagé client/admin (auth obligatoire)
-│   ├── _dashboard/admin/   → index, articles, comments, subscribers, payments, settings
+│   ├── _dashboard/admin/   → index, articles.index, articles/ (new, $postId), comments, subscribers, payments, settings
 │   └── api/                → auth/$.ts (better-auth), inngest.ts
 ├── router.tsx              → createRouter + intégration SSR Query
 ├── routeTree.gen.ts        → GÉNÉRÉ (ne pas éditer)
@@ -54,6 +54,6 @@ src/
 
 ## Source de vérité : Prisma `Post`
 
-Les articles sont stockés et servis via le modèle **Prisma `Post`** (PostgreSQL) : `title`, `slug`, `content` (markdown), `excerpt`, `coverImage`, `postImages`, `isPremium`, `status`, `publishedAt`.
+Les articles sont stockés et servis via le modèle **Prisma `Post`** (PostgreSQL) : `title`, `slug` (généré côté serveur, cf. `08-decisions-log.md`), `content` (HTML riche généré par Quill — cf. `08-decisions-log.md`), `excerpt`, `coverImage`, `postImages`, `isPremium`, `status`, `publishedAt`.
 
 **Strapi est legacy** : son SDK (`src/data/strapi-sdk.ts`), ses loaders (`src/data/loaders/articles.ts`), ses types (`src/types/strapi.ts`), ses blocs (`src/components/blocks/`) et les routes `demo/strapi.*` sont à retirer progressivement au profit de Prisma. Voir `08-decisions-log.md`. Ne pas introduire une troisième source.

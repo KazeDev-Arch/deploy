@@ -2,11 +2,32 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useServerFn } from '@tanstack/react-start'
 import { toast } from 'sonner'
 
-import { createPost, deletePost, listPosts, updatePost } from '#/mutations/post'
+import {
+  createPost,
+  deletePost,
+  getPost,
+  listPosts,
+  updatePost,
+} from '#/mutations/post'
 
 const POSTS_QUERY_KEY = ['posts'] as const
 
 export type PostListItem = Awaited<ReturnType<typeof listPosts>>[number]
+
+/** Shape minimal requis par le formulaire d'édition (liste ou détail). */
+export type PostFormPost = Pick<
+  PostListItem,
+  | 'id'
+  | 'title'
+  | 'content'
+  | 'excerpt'
+  | 'coverImage'
+  | 'postImages'
+  | 'isPremium'
+  | 'status'
+>
+
+const postDetailKey = (id: string) => [...POSTS_QUERY_KEY, 'detail', id] as const
 
 // ───────────────────────────────
 // Lecture
@@ -17,6 +38,14 @@ export function useListPosts() {
   return useQuery({
     queryKey: POSTS_QUERY_KEY,
     queryFn: () => listPostsFn(),
+  })
+}
+
+export function useGetPost(id: string) {
+  const getPostFn = useServerFn(getPost)
+  return useQuery({
+    queryKey: postDetailKey(id),
+    queryFn: () => getPostFn({ data: id }),
   })
 }
 

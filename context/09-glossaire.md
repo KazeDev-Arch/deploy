@@ -12,7 +12,7 @@
 | Strapi | Headless CMS **legacy** — source de contenu remplacée par Prisma `Post` (voir `08-decisions-log.md`). |
 | Bloc de contenu | Composant structuré d'un article Strapi : `rich-text`, `media`, `quote`, `slider` (rendus par `src/components/blocks/`). |
 | Markdown | Format d'écriture des articles (rendu via `react-markdown` + `remark-gfm`). |
-| Slug | Identifiant lisible d'un article dans l'URL (unique). |
+| Slug | Identifiant lisible d'un article dans l'URL (unique). Généré automatiquement côté serveur depuis le titre — jamais saisi ni affiché dans l'UI. |
 | Server function | Fonction serveur type-safe (`createServerFn`) appelable depuis le client. |
 | Loader | Fonction de chargement de données côté serveur définie dans une route. |
 | Rôle | `ADMIN` (auteur/éditeur) ou `CLIENT` (lecteur). |

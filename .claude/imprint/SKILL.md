@@ -13,7 +13,7 @@ description: Utiliser en début de session de travail un peu longue sur le proje
 
 ## Procédure
 
-1. Lire `CLAUDE.md` à la racine.
+1. Lire `AGENTS.md` à la racine.
 2. Parcourir rapidement les 9 fichiers de `context/` — au minimum leurs titres/sections pour savoir ce qui existe.
 3. Lire en particulier les entrées récentes de `context/08-decisions-log.md` — fichier qui change le plus, reflète les décisions les plus fraîches.
 4. Vérifier la stack réelle dans `package.json` et `src/` (TanStack Start, shadcn, Prisma) — le code fait foi sur la doc.

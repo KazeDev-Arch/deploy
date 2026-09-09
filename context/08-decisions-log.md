@@ -159,3 +159,56 @@ Format par entrée : **Contexte / Décision / Alternative écartée**. Toujours 
 **Décision** : `clientRole = ac.newRole({})`. Le catalogue RBAC de `permissions.ts` régit les capacités de **gestion** du panneau ; la lecture publique des articles (gratuits/premium) est une autre couche (paywall). Un `CLIENT` n'a donc **aucune** capacité de gestion, et ne voit que « Tableau de bord ».
 
 **Alternative écartée** : garder `article.read` sur le client (fuitait dans le menu admin), ou corriger uniquement le menu en exigeant `article.create` (cache le problème au lieu de le résoudre à la source).
+
+## 2026-09-09 — Éditeur d'article : page entière, la modale est supprimée
+
+**Contexte** : la création/édition d'article passait par une modale (`ArticleFormDialog`, `max-w-2xl` avec scroll) — trop étroite pour la rédaction d'un article avec éditeur riche, couverture et images.
+
+**Décision** :
+- Pages dédiées `/admin/articles/new` (création) et `/admin/articles/$postId` (édition), composées autour d'un `PostForm` deux colonnes (contenu + barre latérale publication/vitrine).
+- La table d'articles navigue vers ces pages ; la modale a été supprimée.
+- Les routes sont des fichiers plats : `articles.index.tsx` (liste) + `articles/new.tsx` + `articles/$postId.tsx` (voir convention de nommage dans `05-coding-conventions.md`).
+
+**Alternative écartée** : agrandir la modale (reste exigu pour un éditeur long), ou un éditeur split-screen dans la liste (complexité inutile).
+
+## 2026-09-09 — Contenu des articles : Quill via `react-quill-new`, HTML stocké dans `Post.content`
+
+**Contexte** : les articles sont des contenus éditoriaux avec mise en forme (titres, listes, citations, code) et une ou plusieurs images insérées dans le texte après l'image de couverture. Le `Textarea` Markdown ne suffisait pas. Le paquet d'origine `react-quill` plante avec React 19 (`findDOMNode` supprimé).
+
+**Décision** :
+- Dépendance **`react-quill-new`** (fork maintenu, Quill 2, compatible React 19).
+- Composant `PostEditor` (`components/admin/articles/`) thème Snow, toolbar bornée aux formats utiles (headers, listes, citation, code-block, lien, **image**).
+- Habillage 100 % tokens dans `src/styles.css` (`.post-editor` pour l'éditeur, `.quill-content` pour le rendu public futur) — aucune couleur codée en dur.
+- Le HTML Quill est stocké tel quel dans `Post.content` (Prisma).
+
+**Alternative écartée** : conserver Markdown en Textarea (pas d'insertion d'image fluide), ou TipTap/ProseMirror (dépendance plus lourde, non demandée).
+
+## 2026-09-09 — Slug : généré côté serveur, jamais exposé dans l'UI
+
+**Contexte** : l'utilisateur ne doit voir **aucun** champ slug — l'adresse d'un article est un détail technique généré automatiquement à l'insertion.
+
+**Décision** :
+- `generateUniqueSlug(title)` dans `src/mutations/post.ts` : `slugify()` (utilitaire `src/lib/slug.ts`, accents français) + suffixe `-2`, `-3`… en cas de collision (unicité testée en base).
+- Le slug est retiré des schémas Zod et du formulaire ; `createPost` le calcule seul.
+- En **mise à jour**, le slug ne change pas : les URLs déjà partagées restent valides.
+
+**Alternative écartée** : slug éditable côté client avec régénération (expose un détail technique et multiplie les cas d'erreur de validation).
+
+## 2026-09-09 — Validation de formulaires : erreur affichée sous le champ concerné
+
+**Contexte** : les erreurs de validation signalées uniquement par toast ne permettent pas d'identifier le champ en cause, surtout sur un formulaire long.
+
+**Décision** :
+- Validation avant submit ; chaque erreur s'affiche **sous son champ** avec un message clair et spécifique (`text-destructive`, `role="alert"`, `aria-invalid`, `aria-describedby`).
+- L'erreur du champ disparaît dès que l'utilisateur le corrige ; un toast récapitule (« Corrigez les champs signalés… »).
+- Zod côté server function reste le second filet (les messages du schéma servent de référence pour les libellés).
+
+**Alternative écartée** : toast seul (non localisable), ou bloc d'erreurs global en haut du formulaire (obligé de chercher le champ).
+
+## 2026-09-09 — Médias d'articles : R2 public, accès au contenu premium verrouillé
+
+**Contexte** : les images de couverture, de galerie et insérées dans le contenu éditorial seront hébergées dans un bucket Cloudflare R2. La question était de savoir si les médias d'un article premium devaient être privés.
+
+**Décision** : toutes les images sont publiques et servies depuis Cloudflare R2 via une URL stable. Le paywall protège l'accès au contenu de l'article : pour un article premium, un visiteur peut voir la couverture et l'extrait, mais pas le corps de l'article ni les images qui y sont insérées sans abonnement actif.
+
+**Alternative écartée** : rendre les objets R2 privés et générer des URLs signées pour les images premium. Cette complexité n'est pas nécessaire puisque la protection attendue porte sur la lecture de l'article, pas sur la confidentialité intrinsèque de ses fichiers médias.

@@ -3,18 +3,22 @@ import { z } from 'zod'
 export const postStatusSchema = z.enum(['DRAFT', 'PUBLISHED'])
 
 export const createPostSchema = z.object({
-  title: z.string().min(1, 'Le titre est requis').max(200, 'Titre trop long'),
-  slug: z
+  title: z
     .string()
-    .min(1, 'Le slug est requis')
-    .regex(
-      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-      'Slug invalide (minuscules, chiffres, tirets)',
-    ),
+    .min(1, 'Le titre est requis')
+    .max(200, 'Le titre ne peut pas dépasser 200 caractères'),
   content: z.string().min(1, 'Le contenu est requis'),
-  excerpt: z.string().max(300, 'Extrait trop long').optional(),
-  coverImage: z.string().url('URL d’image invalide').optional(),
-  postImages: z.array(z.string().url('URL d’image invalide')).default([]),
+  excerpt: z
+    .string()
+    .max(300, 'L’extrait ne peut pas dépasser 300 caractères')
+    .optional(),
+  coverImage: z
+    .string()
+    .url('L’URL de l’image de couverture est invalide (https://…)')
+    .optional(),
+  postImages: z
+    .array(z.string().url('Une des URL d’images est invalide (https://…)'))
+    .default([]),
   isPremium: z.boolean().default(false),
   status: postStatusSchema.default('DRAFT'),
 })
